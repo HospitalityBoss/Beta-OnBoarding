@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitality Boss — Restaurant Intelligence (Demo)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+  :root{
+    --parchment:#F4F2EE; --warm-white:#FAF8F5; --warm-light:#EDE9E3; --warm-border:#DDD8CF;
+    --cast-iron:#1C1C1C; --ink:#1A1714; --ink-2:#4A4540; --ink-dim:#6B6560;
+    --copper:#B87333; --copper-light:#D4956A; --copper-dark:#8C5524; --burnished:#8C5524;
+    --tomato:#C0392B; --saffron:#C8860A; --spinach:#1B7A3E; --celery:#5B9A3E;
+    --plantain:#E9A319; --beet:#8B2252; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--parchment);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;font-size:13px;min-height:100vh;}
+  .app{display:flex;min-height:100vh;}
+
+  /* SIDENAV — now warm white, not deep ember */
+  .sidenav{width:220px;min-width:220px;background:#141414;display:flex;flex-direction:column;border-right:1px solid rgba(184,115,51,0.25);position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .nav-brand{padding:20px 16px 12px;border-bottom:1px solid rgba(184,115,51,0.25);}
+  .nav-brand .wordmark{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--copper);line-height:1;}
+  .nav-brand .sub{font-size:9px;letter-spacing:3px;color:var(--copper-light);text-transform:uppercase;margin-top:3px;opacity:.8;}
+  .sear-line{height:2px;background:linear-gradient(90deg,var(--copper),var(--copper-dark),transparent);}
+  .nav-section-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--copper);padding:14px 16px 6px;font-weight:500;}
+  .nav-item{padding:9px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;color:rgba(212,149,106,0.7);font-size:12px;font-weight:400;border-left:2px solid transparent;transition:all .15s;}
+  .nav-item:hover{background:rgba(184,115,51,0.1);color:var(--copper-light);}
+  .nav-item.active{color:var(--copper);border-left-color:var(--copper);background:rgba(184,115,51,0.12);font-weight:500;}
+  .nav-dot{width:6px;height:6px;border-radius:50%;background:rgba(184,115,51,0.4);flex-shrink:0;}
+  .nav-dot.tomato{background:var(--tomato);}.nav-dot.saffron{background:var(--saffron);}.nav-dot.spinach{background:var(--spinach);}.nav-dot.copper{background:var(--copper);}
+  .nav-badge{margin-left:auto;background:var(--tomato);color:#fff;font-size:9px;font-weight:600;padding:1px 5px;border-radius:8px;}
+  .nav-footer{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(184,115,51,0.2);font-size:10px;color:rgba(184,115,51,0.5);}
+
+  .main{flex:1;display:flex;flex-direction:column;overflow-x:hidden;}
+  .topbar{background:var(--warm-white);border-bottom:1px solid var(--warm-border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:10;}
+  .topbar-left{display:flex;align-items:center;gap:20px;}
+  .page-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--ink);}
+  .concept-tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);background:rgba(184,115,51,0.1);border:1px solid rgba(184,115,51,0.3);padding:3px 10px;border-radius:2px;}
+  .topbar-right{display:flex;align-items:center;gap:16px;}
+  .period-selector{display:flex;gap:2px;background:var(--warm-light);border-radius:4px;padding:3px;}
+  .period-btn{padding:4px 12px;font-size:11px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--ink-dim);border-radius:3px;transition:all .15s;font-family:'Inter',sans-serif;}
+  .period-btn.active{background:var(--copper);color:var(--white);}
+  .alert-pill{display:flex;align-items:center;gap:6px;background:var(--tomato-tint,#FDF0EE);border:1px solid rgba(192,57,43,0.4);padding:4px 10px;border-radius:12px;font-size:11px;color:var(--tomato);cursor:pointer;}
+
+  .channel-tabs{background:var(--warm-white);border-bottom:1px solid var(--warm-border);padding:0 24px;display:flex;}
+  .channel-tab{padding:10px 20px;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;color:var(--ink-dim);border-bottom:2px solid transparent;transition:all .15s;display:flex;align-items:center;gap:8px;}
+  .channel-tab:hover{color:var(--ink);}
+  .channel-tab.active{color:var(--copper-dark);border-bottom-color:var(--copper);}
+  .tab-rev{font-size:10px;font-weight:600;color:var(--spinach);opacity:.8;}
+  .channel-tab.active .tab-rev{opacity:1;}
+
+  .content{padding:20px 24px;flex:1;}
+  .alert-bar{background:#FDF0EE;border:1px solid rgba(192,57,43,0.25);border-radius:4px;padding:10px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .alert-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--copper-dark);font-weight:600;white-space:nowrap;}
+  .alert-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-2);padding:0 10px;border-left:1px solid rgba(184,115,51,0.2);}
+  .alert-item:first-of-type{border-left:none;}
+  .alert-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+  .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px;}
+  .kpi-card{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;padding:14px 16px;position:relative;overflow:hidden;}
+  .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+  .kpi-card.spinach::before{background:var(--spinach);}.kpi-card.saffron::before{background:var(--saffron);}.kpi-card.tomato::before{background:var(--tomato);}.kpi-card.copper::before{background:var(--copper);}.kpi-card.celery::before{background:var(--celery);}
+  .kpi-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:6px;}
+  .kpi-value{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;line-height:1;color:var(--ink);}
+  .kpi-sub{font-size:10px;color:var(--ink-dim);margin-top:4px;}
+  .kpi-trend{font-size:10px;font-weight:500;margin-top:6px;}
+  .kpi-trend.up{color:var(--spinach);}.kpi-trend.down{color:var(--tomato);}.kpi-trend.warn{color:var(--saffron);}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;}
+
+  .panel{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;overflow:hidden;}
+  .panel-header{padding:12px 16px;border-bottom:1px solid var(--warm-border);display:flex;align-items:center;justify-content:space-between;}
+  .panel-title{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:var(--ink);}
+  .panel-badge{font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:2px;}
+  .panel-badge.live{background:rgba(27,122,62,0.12);color:var(--spinach);border:1px solid rgba(27,122,62,0.3);}
+  .panel-badge.warn{background:rgba(200,134,10,0.12);color:var(--saffron);border:1px solid rgba(200,134,10,0.3);}
+  .panel-badge.alert{background:rgba(192,57,43,0.1);color:var(--tomato);border:1px solid rgba(192,57,43,0.3);}
+  .panel-body{padding:16px;}
+
+  .daypart-table{width:100%;border-collapse:collapse;}
+  .daypart-table th{text-align:left;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--burnished);padding:0 8px 8px;border-bottom:1px solid var(--warm-border);font-weight:500;}
+  .daypart-table td{padding:9px 8px;font-size:12px;color:var(--ink-2);border-bottom:1px solid rgba(28,28,28,0.05);}
+  .daypart-table tr:last-child td{border-bottom:none;}
+  .daypart-table td.value{font-weight:500;color:var(--ink);}
+  .daypart-table td.good{color:var(--spinach);font-weight:500;}
+  .daypart-table td.warn{color:var(--saffron);font-weight:500;}
+  .daypart-table td.bad{color:var(--tomato);font-weight:500;}
+  .daypart-label{display:flex;align-items:center;gap:8px;}
+  .dp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+  .channel-mix-bar{height:10px;border-radius:5px;overflow:hidden;display:flex;margin-bottom:12px;}
+  .mix-seg{height:100%;transition:width .4s;}
+  .channel-legend{display:flex;flex-wrap:wrap;gap:12px;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-2);}
+  .legend-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+  .legend-pct{font-weight:600;color:var(--ink);}
+
+  .breakeven-meter{position:relative;margin:12px 0;}
+  .be-track{height:16px;background:var(--warm-light);border-radius:8px;overflow:hidden;position:relative;}
+  .be-fill{height:100%;background:linear-gradient(90deg,var(--tomato) 0%,var(--saffron) 60%,var(--spinach) 85%);border-radius:8px;width:96%;}
+  .be-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink-dim);margin-top:6px;}
+
+  .prime-gauges{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .gauge-item{text-align:center;padding:12px;background:var(--warm-light);border-radius:4px;border:1px solid var(--warm-border);}
+  .gauge-value{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;}
+  .gauge-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-top:4px;}
+  .gauge-target{font-size:10px;color:var(--burnished);margin-top:3px;}
+  .gauge-bar-wrap{height:4px;background:var(--warm-border);border-radius:2px;margin-top:8px;overflow:hidden;}
+  .gauge-bar{height:100%;border-radius:2px;}
+
+  .platform-row{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid rgba(28,28,28,0.05);gap:12px;}
+  .platform-row:last-child{border-bottom:none;}
+  .platform-name{width:120px;font-size:12px;font-weight:500;color:var(--ink);flex-shrink:0;}
+  .pstat{text-align:right;min-width:60px;}
+  .pstat-val{font-size:12px;font-weight:500;color:var(--ink);}
+  .pstat-lbl{font-size:9px;letter-spacing:1px;color:var(--burnished);text-transform:uppercase;}
+
+  .event-row{display:flex;align-items:center;padding:10px 12px;border-radius:3px;margin-bottom:6px;background:var(--warm-light);border:1px solid var(--warm-border);gap:12px;}
+  .event-date{width:48px;text-align:center;flex-shrink:0;}
+  .event-date .ed-day{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--copper);line-height:1;}
+  .event-date .ed-mon{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--burnished);}
+  .event-info{flex:1;}
+  .event-name{font-size:12px;font-weight:500;color:var(--ink);margin-bottom:2px;}
+  .event-detail{font-size:10px;color:var(--ink-dim);}
+  .event-status{font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;text-transform:uppercase;flex-shrink:0;}
+  .status-confirmed{background:rgba(27,122,62,0.12);color:var(--spinach);border:1px solid rgba(27,122,62,0.3);}
+  .status-deposit{background:rgba(184,115,51,0.12);color:var(--copper-dark);border:1px solid rgba(184,115,51,0.3);}
+  .status-prospect{background:var(--warm-light);color:var(--ink-dim);border:1px solid var(--warm-border);}
+  .event-revenue{text-align:right;flex-shrink:0;min-width:80px;}
+  .event-revenue .rev-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--ink);}
+  .event-revenue .rev-margin{font-size:10px;}
+
+  .check-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+  .check-label{width:90px;font-size:11px;color:var(--ink-dim);}
+  .check-bar-wrap{flex:1;height:8px;background:var(--warm-light);border-radius:4px;overflow:hidden;}
+  .check-bar{height:100%;border-radius:4px;}
+  .check-val{width:50px;text-align:right;font-size:12px;font-weight:500;color:var(--ink);}
+
+  .turns-grid{display:grid;grid-template-columns:60px repeat(7,1fr);gap:3px;margin-top:8px;}
+  .tg-header{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--burnished);text-align:center;padding-bottom:4px;}
+  .tg-label{font-size:9px;letter-spacing:1px;color:var(--burnished);display:flex;align-items:center;}
+  .tg-cell{height:28px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--white);}
+
+  .section-divider{display:flex;align-items:center;gap:12px;margin:20px 0 16px;}
+  .sd-label{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:3px;color:var(--copper-dark);white-space:nowrap;}
+  .sd-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(184,115,51,0.4),transparent);}
+
+  .callout-box{background:#FDF0EE;border:1px solid rgba(192,57,43,0.2);border-radius:4px;padding:14px 16px;margin-bottom:16px;}
+  .callout-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--tomato);margin-bottom:6px;font-weight:600;}
+  .callout-body{font-size:12px;color:var(--ink-2);line-height:1.6;}
+  .callout-body strong{color:var(--ink);font-weight:500;}
+
+  .stat-row{display:flex;gap:0;border:1px solid var(--warm-border);border-radius:4px;overflow:hidden;margin-bottom:12px;}
+  .stat-cell{flex:1;padding:12px 14px;border-right:1px solid var(--warm-border);}
+  .stat-cell:last-child{border-right:none;}
+  .stat-cell-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--burnished);margin-bottom:4px;}
+  .stat-cell-value{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink);line-height:1;}
+  .stat-cell-sub{font-size:10px;color:var(--ink-dim);margin-top:2px;}
+
+  .text-copper{color:var(--copper-dark);}.text-spinach{color:var(--spinach);}.text-saffron{color:var(--saffron);}.text-tomato{color:var(--tomato);}.text-celery{color:var(--celery);}.text-muted{color:var(--ink-dim);}
+  .mt-8{margin-top:8px;}.fs-10{font-size:10px;}
+  .inline-badge{font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:1px 6px;border-radius:2px;font-weight:600;}
+  .ib-spinach{background:rgba(27,122,62,0.12);color:var(--spinach);}.ib-saffron{background:rgba(200,134,10,0.12);color:var(--saffron);}.ib-tomato{background:rgba(192,57,43,0.1);color:var(--tomato);}
+  .divider{height:1px;background:var(--warm-border);margin:12px 0;}
+  .info-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(28,28,28,0.05);font-size:12px;}
+  .info-row:last-child{border-bottom:none;}
+  .info-row-label{color:var(--ink-dim);}
+  .info-row-value{color:var(--ink);font-weight:500;}
+  .tab-panel{display:none;}.tab-panel.active{display:block;}
+  .demo-banner{background:rgba(184,115,51,0.1);border-bottom:1px solid rgba(184,115,51,0.25);text-align:center;padding:6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);}
+  @media(max-width:1100px){.kpi-row{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-2-1{grid-template-columns:1fr;}}
+  @media(max-width:720px){.sidenav{display:none;}}
+</style>
+</head>
+<body>
+<div class="demo-banner">◆ Interactive Demo · Sample Data · Cedar &amp; Vine Catering (fictional)</div>
+<div class="app">
+  <nav class="sidenav">
+    <div class="nav-brand"><div class="wordmark">HOSPITALITY BOSS</div><div class="sub">Featuring Culinary IQ™</div></div>
+    <div class="sear-line"></div>
+    <div class="nav-section-label">Dashboards</div>
+    <div class="nav-item active"><span class="nav-dot copper"></span>Restaurant Intelligence</div>
+    <div class="nav-item"><span class="nav-dot"></span>Catering / Events</div>
+    <div class="nav-item"><span class="nav-dot"></span>Fast Casual / Café</div>
+    <div class="nav-item"><span class="nav-dot"></span>Executive Overview</div>
+    <div class="nav-section-label">Operations</div>
+    <div class="nav-item"><span class="nav-dot saffron"></span>Floor Operations<span class="nav-badge">3</span></div>
+    <div class="nav-item"><span class="nav-dot"></span>Kitchen &amp; Food Cost</div>
+    <div class="nav-item"><span class="nav-dot tomato"></span>Delivery Channels<span class="nav-badge">1</span></div>
+    <div class="nav-item"><span class="nav-dot"></span>Buyouts &amp; Events</div>
+    <div class="nav-section-label">Finance</div>
+    <div class="nav-item"><span class="nav-dot spinach"></span>P&amp;L by Channel</div>
+    <div class="nav-item"><span class="nav-dot"></span>Breakeven Tracker</div>
+    <div class="nav-item"><span class="nav-dot"></span>Menu Engineering</div>
+    <div class="nav-footer">Culinary IQ™ v2.1<br>Restaurant Module · Demo</div>
+  </nav>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left"><div class="page-title">RESTAURANT INTELLIGENCE</div><div class="concept-tag">Sit-Down / Full Service</div></div>
+      <div class="topbar-right">
+        <div class="period-selector"><button class="period-btn">Today</button><button class="period-btn">Week</button><button class="period-btn active">Month</button><button class="period-btn">Quarter</button></div>
+        <div class="alert-pill"><div class="alert-dot" style="background:var(--tomato)"></div>4 Alerts Active</div>
+      </div>
+    </div>
+    <div class="channel-tabs">
+      <div class="channel-tab active"><span>All Channels</span><span class="tab-rev">$148,240</span></div>
+      <div class="channel-tab"><span>Dine-In</span><span class="tab-rev">$94,300</span></div>
+      <div class="channel-tab"><span>Buyouts</span><span class="tab-rev">$22,800</span></div>
+      <div class="channel-tab"><span>Delivery</span><span class="tab-rev">$24,140</span></div>
+      <div class="channel-tab"><span>Pickup</span><span class="tab-rev">$7,000</span></div>
+    </div>
+
+    <div class="content">
+      <div class="alert-bar">
+        <div class="alert-label">Culinary IQ™</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--tomato)"></div>DoorDash net margin below 8% — commission drag critical</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--saffron)"></div>Friday dinner turn time up 14 min vs. prior month</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--saffron)"></div>Food cost 2.4pts above theoretical</div>
+        <div class="alert-item"><div class="alert-dot" style="background:var(--copper)"></div>June buyout pipeline: 2 prospects unsigned</div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card copper"><div class="kpi-label">Total Revenue MTD</div><div class="kpi-value">$148,240</div><div class="kpi-sub">Target: $155,000</div><div class="kpi-trend warn">↓ 4.4% vs. target</div></div>
+        <div class="kpi-card spinach"><div class="kpi-label">Prime Cost</div><div class="kpi-value">61.2%</div><div class="kpi-sub">Target: ≤ 63%</div><div class="kpi-trend up">✓ On target</div></div>
+        <div class="kpi-card saffron"><div class="kpi-label">RevPASH — Dinner</div><div class="kpi-value">$38.40</div><div class="kpi-sub">Target: $44+</div><div class="kpi-trend warn">↓ Below target</div></div>
+        <div class="kpi-card tomato"><div class="kpi-label">Delivery Net Margin</div><div class="kpi-value">8.1%</div><div class="kpi-sub">After all commissions</div><div class="kpi-trend down">↓ Alert threshold</div></div>
+        <div class="kpi-card celery"><div class="kpi-label">Avg Check — Dinner</div><div class="kpi-value">$67.40</div><div class="kpi-sub">Bev attach: 72%</div><div class="kpi-trend up">↑ +$3.20 vs. LM</div></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Revenue Channel Mix</div><div class="panel-badge live">Live</div></div>
+          <div class="panel-body">
+            <div class="channel-mix-bar">
+              <div class="mix-seg" style="width:63.6%;background:var(--copper)"></div>
+              <div class="mix-seg" style="width:15.4%;background:var(--copper-light)"></div>
+              <div class="mix-seg" style="width:16.3%;background:var(--saffron)"></div>
+              <div class="mix-seg" style="width:4.7%;background:var(--burnished)"></div>
+            </div>
+            <div class="channel-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--copper)"></div>Dine-In <span class="legend-pct">63.6%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--copper-light)"></div>Buyouts <span class="legend-pct">15.4%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--saffron)"></div>Delivery <span class="legend-pct">16.3%</span></div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--burnished)"></div>Pickup <span class="legend-pct">4.7%</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="fs-10 text-muted" style="line-height:1.6"><strong class="text-saffron">Culinary IQ note:</strong> Delivery is growing (+2.1pts) but net margin is compressing. If delivery share exceeds 20%, flag for channel profitability review.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Breakeven Tracker</div><div class="panel-badge warn">Pace Watch</div></div>
+          <div class="panel-body">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+              <div><div class="kpi-label">Monthly Target</div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ink)">$155,000</div></div>
+              <div style="text-align:right"><div class="kpi-label">Revenue to Date</div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--copper-dark)">$148,240</div></div>
+            </div>
+            <div class="breakeven-meter"><div class="be-track"><div class="be-fill"></div></div>
+              <div class="be-labels"><span>$0</span><span class="text-tomato">Breakeven $98K</span><span>Target $155K</span></div>
+            </div>
+            <div class="divider"></div>
+            <div class="stat-row" style="margin-bottom:0">
+              <div class="stat-cell"><div class="stat-cell-label">Fixed Costs</div><div class="stat-cell-value">$52,400</div><div class="stat-cell-sub">Monthly floor</div></div>
+              <div class="stat-cell"><div class="stat-cell-label">Days Remaining</div><div class="stat-cell-value" style="color:var(--saffron)">9</div><div class="stat-cell-sub">In period</div></div>
+              <div class="stat-cell"><div class="stat-cell-label">Needed / Day</div><div class="stat-cell-value" style="color:var(--tomato)">$862</div><div class="stat-cell-sub">To hit target</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Day-Part Performance</div><div class="panel-badge live">This Month</div></div>
+          <div class="panel-body" style="padding:0">
+            <table class="daypart-table">
+              <thead><tr><th style="padding-left:16px">Service</th><th>Covers</th><th>Turns</th><th>Avg Check</th><th>RevPASH</th><th style="padding-right:16px">Bev</th></tr></thead>
+              <tbody>
+                <tr><td style="padding-left:16px"><div class="daypart-label"><div class="dp-dot" style="background:var(--plantain)"></div>Brunch</div></td><td class="value">612</td><td class="value good">2.1x</td><td class="value">$44.20</td><td class="value good">$42.10</td><td class="value warn" style="padding-right:16px">58%</td></tr>
+                <tr><td style="padding-left:16px"><div class="daypart-label"><div class="dp-dot" style="background:var(--celery)"></div>Lunch</div></td><td class="value">890</td><td class="value good">2.4x</td><td class="value">$32.80</td><td class="value warn">$36.20</td><td class="value warn" style="padding-right:16px">41%</td></tr>
+                <tr><td style="padding-left:16px"><div class="daypart-label"><div class="dp-dot" style="background:var(--burnished)"></div>Dinner Sun–Thu</div></td><td class="value">1,240</td><td class="value warn">1.7x</td><td class="value">$62.40</td><td class="value warn">$35.60</td><td class="value good" style="padding-right:16px">74%</td></tr>
+                <tr><td style="padding-left:16px"><div class="daypart-label"><div class="dp-dot" style="background:var(--copper)"></div>Dinner Fri–Sat</div></td><td class="value">1,080</td><td class="value warn">1.5x</td><td class="value good">$74.20</td><td class="value warn">$38.40</td><td class="value good" style="padding-right:16px">86%</td></tr>
+                <tr><td style="padding-left:16px;padding-bottom:14px"><div class="daypart-label"><div class="dp-dot" style="background:var(--beet)"></div>Happy Hour</div></td><td class="value" style="padding-bottom:14px">440</td><td class="value" style="padding-bottom:14px">—</td><td class="value" style="padding-bottom:14px">$22.10</td><td class="value bad" style="padding-bottom:14px">$18.40</td><td class="value good" style="padding-right:16px;padding-bottom:14px">92%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Prime Cost Dashboard</div><div class="panel-badge live">MTD</div></div>
+          <div class="panel-body">
+            <div class="prime-gauges">
+              <div class="gauge-item"><div class="gauge-value" style="color:var(--saffron)">32.4%</div><div class="gauge-label">Food Cost</div><div class="gauge-target">Target: 28–32%</div><div class="gauge-bar-wrap"><div class="gauge-bar" style="width:85%;background:var(--saffron)"></div></div></div>
+              <div class="gauge-item"><div class="gauge-value" style="color:var(--spinach)">28.8%</div><div class="gauge-label">Labor Cost</div><div class="gauge-target">Target: ≤ 32%</div><div class="gauge-bar-wrap"><div class="gauge-bar" style="width:70%;background:var(--spinach)"></div></div></div>
+              <div class="gauge-item"><div class="gauge-value" style="color:var(--spinach)">61.2%</div><div class="gauge-label">Prime Cost</div><div class="gauge-target">Target: ≤ 63%</div><div class="gauge-bar-wrap"><div class="gauge-bar" style="width:78%;background:var(--spinach)"></div></div></div>
+            </div>
+            <div class="divider"></div>
+            <div class="kpi-label" style="margin-bottom:10px">Food Cost: Actual vs. Theoretical</div>
+            <div class="check-row"><div class="check-label">Theoretical</div><div class="check-bar-wrap"><div class="check-bar" style="width:75%;background:var(--spinach)"></div></div><div class="check-val text-spinach">30.0%</div></div>
+            <div class="check-row"><div class="check-label">Actual</div><div class="check-bar-wrap"><div class="check-bar" style="width:81%;background:var(--saffron)"></div></div><div class="check-val text-saffron">32.4%</div></div>
+            <div class="fs-10 text-muted mt-8"><span class="text-saffron">+2.4pt variance</span> above theoretical. Review portioning, waste log, and receiving accuracy.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"><div class="sd-label">Delivery Channel Intelligence</div><div class="sd-line"></div></div>
+      <div class="callout-box">
+        <div class="callout-title">⚠ Commission Drag Alert — Culinary IQ™</div>
+        <div class="callout-body">This month your 3rd-party platforms collected <strong>$24,140 in gross delivery revenue</strong>. After commissions, net is <strong>$17,822</strong>. You paid <strong>$6,318 in commission fees</strong> — before food cost, packaging, and labor. DoorDash effective rate this month: <strong>28.4%</strong>. Review whether your delivery menu pricing offsets this drag.</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">Platform-by-Platform Performance</div><div class="panel-badge alert">1 Alert</div></div>
+        <div class="panel-body">
+          <div class="platform-row"><div class="platform-name">DoorDash <span class="inline-badge ib-tomato">Alert</span></div><div style="flex:1"><div style="height:6px;background:var(--warm-light);border-radius:3px;overflow:hidden;margin-bottom:3px"><div style="height:100%;width:71.6%;background:var(--tomato);border-radius:3px"></div></div><div style="font-size:9px;color:var(--burnished)">Net = 71.6% after 28.4% commission</div></div><div class="pstat"><div class="pstat-val">$11,200</div><div class="pstat-lbl">Gross</div></div><div class="pstat"><div class="pstat-val text-tomato">$3,181</div><div class="pstat-lbl">Comm.</div></div><div class="pstat"><div class="pstat-val">$8,019</div><div class="pstat-lbl">Net</div></div><div class="pstat"><div class="pstat-val text-tomato">6.8%</div><div class="pstat-lbl">Margin</div></div></div>
+          <div class="platform-row"><div class="platform-name">Uber Eats <span class="inline-badge ib-saffron">Watch</span></div><div style="flex:1"><div style="height:6px;background:var(--warm-light);border-radius:3px;overflow:hidden;margin-bottom:3px"><div style="height:100%;width:77%;background:var(--saffron);border-radius:3px"></div></div><div style="font-size:9px;color:var(--burnished)">Net = 77% after 23% commission</div></div><div class="pstat"><div class="pstat-val">$7,440</div><div class="pstat-lbl">Gross</div></div><div class="pstat"><div class="pstat-val text-saffron">$1,711</div><div class="pstat-lbl">Comm.</div></div><div class="pstat"><div class="pstat-val">$5,729</div><div class="pstat-lbl">Net</div></div><div class="pstat"><div class="pstat-val text-saffron">9.4%</div><div class="pstat-lbl">Margin</div></div></div>
+          <div class="platform-row"><div class="platform-name">Direct Pickup <span class="inline-badge ib-spinach">No Fee</span></div><div style="flex:1"><div style="height:6px;background:var(--warm-light);border-radius:3px;overflow:hidden;margin-bottom:3px"><div style="height:100%;width:100%;background:var(--spinach);border-radius:3px"></div></div><div style="font-size:9px;color:var(--burnished)">Zero commission — highest net margin</div></div><div class="pstat"><div class="pstat-val">$7,000</div><div class="pstat-lbl">Gross</div></div><div class="pstat"><div class="pstat-val text-spinach">$0</div><div class="pstat-lbl">Comm.</div></div><div class="pstat"><div class="pstat-val">$7,000</div><div class="pstat-lbl">Net</div></div><div class="pstat"><div class="pstat-val text-spinach">18.2%</div><div class="pstat-lbl">Margin</div></div></div>
+          <div class="divider"></div>
+          <div class="fs-10 text-muted"><strong class="text-copper">Culinary IQ recommendation:</strong> Direct pickup is your highest net-margin off-premise channel at 18.2%. Every $1,000 shifted from DoorDash to direct pickup recovers ~$115 in margin. Promote direct ordering via QR codes, email, and in-restaurant signage.</div>
+        </div>
+      </div>
+
+      <div class="section-divider"><div class="sd-label">Buyout &amp; Private Event Pipeline</div><div class="sd-line"></div></div>
+      <div class="grid-2-1">
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Upcoming Buyouts</div><div class="panel-badge live">Jun–Aug</div></div>
+          <div class="panel-body">
+            <div class="event-row"><div class="event-date"><div class="ed-day">14</div><div class="ed-mon">Jun</div></div><div class="event-info"><div class="event-name">Full Buyout — Corporate Dinner</div><div class="event-detail">80 guests · Full restaurant · 3-course · Bar included</div></div><div class="event-status status-confirmed">Confirmed</div><div class="event-revenue"><div class="rev-val">$8,400</div><div class="rev-margin text-spinach">Est. 18% margin</div></div></div>
+            <div class="event-row"><div class="event-date"><div class="ed-day">21</div><div class="ed-mon">Jun</div></div><div class="event-info"><div class="event-name">Half Buyout — Anniversary Party</div><div class="event-detail">40 guests · Private room · Passed apps + dinner</div></div><div class="event-status status-deposit">Deposit Pd.</div><div class="event-revenue"><div class="rev-val">$4,200</div><div class="rev-margin text-saffron">Est. 14% margin</div></div></div>
+            <div class="event-row"><div class="event-date"><div class="ed-day">12</div><div class="ed-mon">Jul</div></div><div class="event-info"><div class="event-name">Full Buyout — Rehearsal Dinner</div><div class="event-detail">65 guests · Full restaurant · Plated · Full bar</div></div><div class="event-status status-deposit">Deposit Pd.</div><div class="event-revenue"><div class="rev-val">$7,100</div><div class="rev-margin text-spinach">Est. 17% margin</div></div></div>
+            <div class="event-row"><div class="event-date"><div class="ed-day">09</div><div class="ed-mon">Aug</div></div><div class="event-info"><div class="event-name">Full Buyout — Non-Profit Gala</div><div class="event-detail">100 guests · Full restaurant · Multi-course · Full bar</div></div><div class="event-status status-prospect">Unsigned</div><div class="event-revenue"><div class="rev-val">$11,200</div><div class="rev-margin text-muted">Pending deposit</div></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Buyout Summary</div></div>
+          <div class="panel-body">
+            <div class="info-row"><div class="info-row-label">Confirmed Revenue</div><div class="info-row-value text-spinach">$22,800</div></div>
+            <div class="info-row"><div class="info-row-label">Pipeline (unsigned)</div><div class="info-row-value text-saffron">$14,300</div></div>
+            <div class="info-row"><div class="info-row-label">Deposits Collected</div><div class="info-row-value">$5,700</div></div>
+            <div class="info-row"><div class="info-row-label">Events This Quarter</div><div class="info-row-value">5 booked</div></div>
+            <div class="info-row"><div class="info-row-label">Buyout % of Revenue</div><div class="info-row-value">15.4%</div></div>
+            <div class="divider"></div>
+            <div class="fs-10 text-muted" style="line-height:1.6"><span class="text-copper">2 unsigned contracts</span> totaling $14,300 need follow-up. No deposit = no hold on the date.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:24px 0 8px;font-size:10px;color:var(--burnished);letter-spacing:2px;text-transform:uppercase">Hospitality Boss · Culinary IQ™ · Restaurant Module · Demo with sample data — not financial advice</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

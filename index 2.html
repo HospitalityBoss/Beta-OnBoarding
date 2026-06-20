@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitality Boss — Run Your Kitchen. Own Your Numbers.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F5F0E8;--parchment-mid:#EDE8DE;--parchment-deep:#E0D9CC;
+    --cast-iron:#1C1C1C;--cast-iron-mid:#3A3A3A;
+    --copper:#B87333;--copper-light:#D4956A;--copper-dark:#8C5524;
+    --stainless:#6B6560;
+    --tomato:#C0392B;--spinach:#1B4D3E;--celery:#7FB069;--saffron:#E9A319;--plantain:#F4C842;--beet:#8B2252;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--parchment);color:var(--cast-iron);font-family:'Inter',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;}
+  .sear{display:block;width:100%;height:2px;background:linear-gradient(90deg,transparent 0%,var(--copper) 15%,var(--copper-light) 50%,var(--copper) 85%,transparent 100%);opacity:.85;}
+  .sear-thin{display:block;width:100%;height:1px;background:linear-gradient(90deg,transparent 0%,var(--copper-dark) 20%,var(--copper) 50%,var(--copper-dark) 80%,transparent 100%);opacity:.35;}
+  .container{max-width:1100px;margin:0 auto;padding:0 40px;}
+  .container-sm{max-width:760px;margin:0 auto;padding:0 40px;}
+  .demo-banner{background:var(--cast-iron);text-align:center;padding:7px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-light);}
+  nav{position:sticky;top:0;z-index:100;background:rgba(245,240,232,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--parchment-deep);}
+  .nav-inner{padding:18px 0;display:flex;align-items:center;justify-content:space-between;}
+  .logo-mark{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+  .logo-top{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.12em;color:var(--cast-iron);}
+  .logo-bottom{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.12em;color:var(--copper);}
+  .logo-sub{font-size:7px;letter-spacing:.25em;color:var(--stainless);text-transform:uppercase;margin-top:3px;}
+  .nav-links{display:flex;gap:32px;list-style:none;align-items:center;}
+  .nav-links a{text-decoration:none;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--stainless);transition:color .2s;}
+  .nav-links a:hover{color:var(--copper);}
+  .nav-cta{background:var(--copper)!important;color:#fff!important;padding:8px 18px;}
+  .nav-cta:hover{background:var(--copper-light)!important;}
+  .hero{min-height:80vh;display:flex;align-items:center;padding:72px 0;}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+  .hero-eyebrow{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--copper);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+  .hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--copper);}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6.5vw,78px);letter-spacing:.04em;line-height:.95;color:var(--cast-iron);margin-bottom:24px;}
+  .hero h1 .acc{color:var(--copper);}
+  .hero-body{font-size:15px;color:var(--stainless);line-height:1.8;margin-bottom:32px;max-width:440px;}
+  .hero-body strong{color:var(--cast-iron);font-weight:500;}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .btn-primary{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.18em;background:var(--copper);color:#fff;padding:14px 30px;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s;}
+  .btn-primary:hover{background:var(--copper-light);}
+  .btn-ghost{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.18em;background:transparent;color:var(--cast-iron-mid);padding:13px 30px;border:1px solid var(--parchment-deep);cursor:pointer;text-decoration:none;display:inline-block;transition:all .2s;}
+  .btn-ghost:hover{border-color:var(--copper);color:var(--copper);}
+  .hero-right{display:flex;flex-direction:column;gap:10px;}
+  .signal-card{padding:18px 20px;border-left:3px solid;background:var(--parchment-mid);}
+  .sc-label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--stainless);margin-bottom:5px;}
+  .sc-row{display:flex;align-items:baseline;gap:10px;}
+  .sc-metric{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.04em;line-height:1;}
+  .sc-name{font-size:12px;color:var(--cast-iron-mid);}
+  .sc-badge{display:inline-block;margin-top:7px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:3px 9px;font-weight:600;}
+  .sig-tomato{border-color:var(--tomato);}.sig-tomato .sc-metric{color:var(--tomato);}.sig-tomato .sc-badge{background:var(--tomato);color:#fff;}
+  .sig-saffron{border-color:var(--saffron);}.sig-saffron .sc-metric{color:var(--saffron);}.sig-saffron .sc-badge{background:var(--saffron);color:var(--cast-iron);}
+  .sig-spinach{border-color:var(--spinach);}.sig-spinach .sc-metric{color:var(--celery);}.sig-spinach .sc-badge{background:var(--spinach);color:var(--celery);}
+  .section-eyebrow{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--copper);margin-bottom:12px;}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,4.5vw,48px);letter-spacing:.07em;color:var(--cast-iron);margin-bottom:40px;line-height:1.05;}
+  .section-title .acc{color:var(--copper);}
+  .pain-section{padding:88px 0;background:var(--parchment-mid);}
+  .pain-intro{font-size:14px;color:var(--stainless);line-height:1.8;max-width:580px;margin-bottom:44px;}
+  .pain-intro strong{color:var(--cast-iron);font-weight:500;}
+  .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--parchment-deep);}
+  .pain-item{background:var(--parchment-mid);padding:26px 22px;border-top:2px solid transparent;transition:border-color .2s;}
+  .pain-item:hover{border-top-color:var(--copper);background:var(--parchment);}
+  .pain-icon{font-size:18px;margin-bottom:10px;}
+  .pain-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.08em;color:var(--cast-iron);margin-bottom:6px;}
+  .pain-desc{font-size:12px;color:var(--stainless);line-height:1.65;}
+  .features-section{padding:88px 0;}
+  .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--parchment-deep);}
+  .feature-item{background:var(--parchment);padding:32px 28px;display:flex;gap:20px;transition:background .2s;}
+  .feature-item:hover{background:var(--parchment-mid);}
+  .f-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--parchment-deep);line-height:1;min-width:44px;flex-shrink:0;}
+  .f-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.08em;color:var(--cast-iron);margin-bottom:7px;}
+  .f-desc{font-size:12px;color:var(--stainless);line-height:1.7;}
+  .tiers-section{padding:88px 0;background:var(--parchment-mid);}
+  .tiers-note{text-align:center;font-size:11px;color:var(--stainless);margin-bottom:28px;font-style:italic;}
+  .tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--parchment-deep);}
+  .tier{background:var(--parchment-mid);padding:32px 26px;position:relative;}
+  .tier.featured{background:var(--parchment);}
+  .tier.featured::before{content:'MOST POPULAR';position:absolute;top:0;left:50%;transform:translateX(-50%);background:var(--copper);color:#fff;font-size:8px;letter-spacing:.2em;font-weight:600;padding:4px 12px;}
+  .tier-name{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--copper);margin-bottom:9px;font-weight:500;}
+  .tier-price{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:.04em;color:var(--cast-iron);line-height:1;margin-bottom:3px;}
+  .tier-price .per{font-family:'Inter',sans-serif;font-size:13px;font-weight:300;color:var(--stainless);}
+  .tier-label{font-size:12px;font-weight:500;color:var(--cast-iron-mid);margin:14px 0 12px;padding-bottom:12px;border-bottom:1px solid var(--parchment-deep);}
+  .tier-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+  .tier-features li{font-size:12px;color:var(--stainless);padding-left:14px;position:relative;line-height:1.4;}
+  .tier-features li::before{content:'—';position:absolute;left:0;color:var(--copper);font-size:10px;}
+  .tier-btn{display:block;width:100%;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:.16em;padding:12px 20px;cursor:pointer;text-decoration:none;border:1px solid var(--parchment-deep);color:var(--copper);background:transparent;transition:all .2s;}
+  .tier-btn:hover,.tier.featured .tier-btn{background:var(--copper);color:#fff;border-color:var(--copper);}
+  .cta-section{padding:88px 0;background:var(--parchment-mid);text-align:center;position:relative;overflow:hidden;}
+  .cta-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--copper),var(--copper-light),var(--copper),transparent);}
+  .cta-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--copper),var(--copper-light),var(--copper),transparent);}
+  .cta-section h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,5.5vw,66px);letter-spacing:.06em;line-height:1;color:var(--cast-iron);margin-bottom:18px;}
+  .cta-section h2 .acc{color:var(--copper);}
+  .cta-section p{font-size:15px;color:var(--stainless);line-height:1.8;max-width:500px;margin:0 auto 36px;}
+  .cta-note{margin-top:18px;font-size:11px;color:var(--stainless);display:flex;justify-content:center;gap:22px;flex-wrap:wrap;}
+  .cta-note span{display:flex;align-items:center;gap:5px;}
+  .cta-note span::before{content:'◆';color:var(--copper);font-size:7px;}
+  footer{background:var(--parchment);border-top:1px solid var(--parchment-deep);padding:44px 0 28px;}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:44px;margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--parchment-deep);}
+  .footer-brand p{font-size:13px;color:var(--stainless);line-height:1.75;margin-top:12px;max-width:260px;}
+  .footer-col h4{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;font-weight:500;}
+  .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .footer-col ul li a{font-size:12px;color:var(--stainless);text-decoration:none;transition:color .2s;}
+  .footer-col ul li a:hover{color:var(--copper);}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .footer-tagline{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper-dark);}
+  .footer-copy{font-size:11px;color:var(--stainless);}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:36px;}.hero-right{display:none;}.pain-grid{grid-template-columns:1fr 1fr;}.features-grid,.tiers-grid{grid-template-columns:1fr;}.footer-top{grid-template-columns:1fr;gap:28px;}}
+  @media(max-width:580px){.container,.container-sm{padding:0 20px;}.pain-grid{grid-template-columns:1fr;}.nav-links{display:none;}.hero{min-height:auto;padding:48px 0;}}
+</style>
+</head>
+<body>
+<div class="demo-banner">◆ Preview Site · Sample Pricing &amp; Data · Not Yet Live</div>
+<span class="sear"></span>
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="logo-mark">
+        <span class="logo-top">HOSPITALITY</span>
+        <span class="logo-bottom">BOSS</span>
+        <span class="logo-sub">Featuring Culinary IQ™</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="story.html">Our Story</a></li>
+        <li><a href="demo-router.html">See the Demo</a></li>
+        <li><a href="beta-intake.html" class="nav-cta">Apply for Beta</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<span class="sear-thin"></span>
+
+<div class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">AI-Powered Business Intelligence</div>
+        <h1>RUN YOUR<br>KITCHEN.<br><span class="acc">OWN YOUR</span><br>NUMBERS.</h1>
+        <p class="hero-body">Most operators are great at food. <strong>Hospitality Boss makes you great at business.</strong> Built by an operator who learned the hard way — so you don't have to.</p>
+        <div class="hero-actions">
+          <a href="demo-router.html" class="btn-primary">See the Live Demo</a>
+          <a href="#platform" class="btn-ghost">How It Works</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="signal-card sig-tomato"><div class="sc-label">Food Cost % · Sample Op</div><div class="sc-row"><div class="sc-metric">34.8%</div><div class="sc-name">Over Target</div></div><span class="sc-badge">⚠ Action Required</span></div>
+        <div class="signal-card sig-saffron"><div class="sc-label">Prime Cost · Blended</div><div class="sc-row"><div class="sc-metric">51.2%</div><div class="sc-name">Watch Threshold</div></div><span class="sc-badge">↗ Approaching Limit</span></div>
+        <div class="signal-card sig-spinach"><div class="sc-label">Labor Ratio · Corporate</div><div class="sc-row"><div class="sc-metric">28.6%</div><div class="sc-name">On Target</div></div><span class="sc-badge">✓ Healthy Margin</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<span class="sear"></span>
+<div class="pain-section" id="platform">
+  <div class="container">
+    <div class="section-eyebrow">The Real Problem</div>
+    <div class="section-title">THE COSTS THAT KILL<br>HOSPITALITY BUSINESSES<br>AREN'T THE ONES <span class="acc">YOU SEE.</span></div>
+    <p class="pain-intro">You know your food. You know your clients. What you might not know is <strong>where the margin is going</strong> — because nobody showed you where to look. Hospitality Boss was built to fix that.</p>
+    <div class="pain-grid">
+      <div class="pain-item"><div class="pain-icon">💸</div><div class="pain-title">Payroll &amp; Labor Tax</div><div class="pain-desc">The true cost of an employee runs 20–30% above their wage. Most operators price events without ever accounting for it.</div></div>
+      <div class="pain-item"><div class="pain-icon">⛽</div><div class="pain-title">Fuel &amp; Delivery</div><div class="pain-desc">Gas prices shift weekly. When's the last time you updated your delivery fee structure to reflect that?</div></div>
+      <div class="pain-item"><div class="pain-icon">🧻</div><div class="pain-title">Paper Goods Creep</div><div class="pain-desc">Per-head disposable costs can silently consume 3–8% of revenue on every single event you run.</div></div>
+      <div class="pain-item"><div class="pain-icon">🥩</div><div class="pain-title">Food Cost Drift</div><div class="pain-desc">Your menu stays static while supplier prices move. The gap between them becomes your loss, every time.</div></div>
+      <div class="pain-item"><div class="pain-icon">⏱️</div><div class="pain-title">Unpaid Prep Time</div><div class="pain-desc">The hours behind every event rarely make it onto an invoice. Your time has a cost — it belongs in your pricing.</div></div>
+      <div class="pain-item"><div class="pain-icon">📋</div><div class="pain-title">Staffing Inefficiency</div><div class="pain-desc">Over-staffing kills margins. Under-staffing kills reputation. Most operators are guessing between the two.</div></div>
+    </div>
+  </div>
+</div>
+
+<span class="sear"></span>
+<div class="features-section">
+  <div class="container">
+    <div class="section-eyebrow">What Hospitality Boss Does</div>
+    <div class="section-title">YOUR ALWAYS-ON<br><span class="acc">BUSINESS ADVISOR</span></div>
+    <div class="features-grid">
+      <div class="feature-item"><div class="f-num">01</div><div><div class="f-title">Business Audit &amp; Blind Spot Detection</div><div class="f-desc">Upload your menus, pricing, and event history. The platform surfaces where you're leaking money — before it becomes a crisis.</div></div></div>
+      <div class="feature-item"><div class="f-num">02</div><div><div class="f-title">Menu Pricing Intelligence</div><div class="f-desc">Real guidance on food cost percentages, markup strategy, and per-head profitability across your full service portfolio.</div></div></div>
+      <div class="feature-item"><div class="f-num">03</div><div><div class="f-title">Event Operations Coaching</div><div class="f-desc">SOPs, BEO best practices, staffing ratios — the institutional knowledge of a seasoned ops director, on demand.</div></div></div>
+      <div class="feature-item"><div class="f-num">04</div><div><div class="f-title">Food Safety &amp; Compliance</div><div class="f-desc">Temperature logs, HACCP guidance, certified kitchen onboarding — stay compliant without the consultant fee.</div></div></div>
+      <div class="feature-item"><div class="f-num">05</div><div><div class="f-title">Culinary IQ™ Dashboard</div><div class="f-desc">Your numbers, clearly coded. Prime cost, food cost, labor ratios — surfaced in plain language, not accounting jargon.</div></div></div>
+      <div class="feature-item"><div class="f-num">06</div><div><div class="f-title">Strategic Growth Planning</div><div class="f-desc">From solo operation to multi-unit business — the platform grows with you at every stage.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<span class="sear"></span>
+<div class="tiers-section" id="pricing">
+  <div class="container">
+    <div class="section-eyebrow">Subscription Tiers</div>
+    <div class="section-title">BUILT FOR WHERE<br>YOU <span class="acc">ARE RIGHT NOW</span></div>
+    <div class="tiers-note">Pricing shown is preliminary and for preview purposes only — final tiers to be confirmed.</div>
+    <div class="tiers-grid">
+      <div class="tier">
+        <div class="tier-name">The Playbook</div>
+        <div class="tier-price">$197<span class="per">/mo</span></div>
+        <div class="tier-label">Self-Serve AI Platform</div>
+        <ul class="tier-features"><li>Always-on AI business advisor</li><li>Menu &amp; pricing analysis</li><li>Food safety guidance</li><li>Operations Q&amp;A — unlimited</li><li>SOP and BEO templates</li><li>Resource library access</li></ul>
+        <a href="beta-intake.html" class="tier-btn">Apply for Beta →</a>
+      </div>
+      <div class="tier featured">
+        <div class="tier-name">The Operator</div>
+        <div class="tier-price">$497<span class="per">/mo</span></div>
+        <div class="tier-label">AI Platform + Monthly Strategy</div>
+        <ul class="tier-features"><li>Everything in The Playbook</li><li>Monthly 1-hr live strategy session</li><li>Profit audit review</li><li>Pricing &amp; margin coaching</li><li>Labor cost analysis</li><li>Priority response</li></ul>
+        <a href="beta-intake.html" class="tier-btn">Apply for Beta →</a>
+      </div>
+      <div class="tier">
+        <div class="tier-name">The Partner</div>
+        <div class="tier-price">$1,500<span class="per">+/mo</span></div>
+        <div class="tier-label">Done-With-You Consulting</div>
+        <ul class="tier-features"><li>Everything in The Operator</li><li>SOP builds &amp; menu audits</li><li>Full onboarding system design</li><li>Staff training support</li><li>Multi-entity analysis</li><li>Dedicated advisor access</li></ul>
+        <a href="beta-intake.html" class="tier-btn">Apply for Beta →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<span class="sear"></span>
+<div class="cta-section">
+  <div class="container-sm">
+    <div class="section-eyebrow">Now Accepting Beta Partners</div>
+    <h2>STOP GUESSING.<br><span class="acc">START KNOWING.</span></h2>
+    <p>We're accepting a small founding cohort of operators for free beta access. You bring your real business. We bring the intelligence. Together we build what this industry has been missing.</p>
+    <a href="beta-intake.html" class="btn-primary">Apply for Beta Access — It's Free</a>
+    <div class="cta-note">
+      <span>No credit card required</span><span>Free during beta</span><span>Your data stays yours</span><span>Limited spots</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-mark">
+          <span class="logo-top">HOSPITALITY</span>
+          <span class="logo-bottom">BOSS</span>
+          <span class="logo-sub">Featuring Culinary IQ™</span>
+        </div>
+        <p>AI-powered business intelligence for the hospitality operator who's done leaving money on the table.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul><li><a href="#platform">How It Works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="demo-router.html">Live Demo</a></li><li><a href="beta-intake.html">Beta Access</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul><li><a href="story.html">Our Story</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-tagline">Built by an operator. Built for operators.</div>
+      <div class="footer-copy">© 2026 Hospitality Boss · Preview Site</div>
+    </div>
+  </div>
+</footer>
+<span class="sear"></span>
+</body>
+</html>

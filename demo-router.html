@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitality Boss — Choose Your View</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#F4F2EE;--warm-white:#FAF8F5;--warm-light:#EDE9E3;--warm-border:#DDD8CF;
+  --forge:#141414;--ink:#1A1714;--ink-2:#4A4540;--ink-dim:#7A7268;
+  --copper:#B87333;--copper-light:#D4956A;--copper-dark:#8C5524;
+  --spinach:#1B4D3E;--celery:#4A8C3F;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--parchment);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;min-height:100vh;}
+.sear{height:2px;background:linear-gradient(90deg,transparent,var(--copper) 15%,var(--copper-light) 50%,var(--copper) 85%,transparent);}
+.wrap{max-width:880px;margin:0 auto;padding:64px 32px 80px;}
+.eyebrow{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;text-align:center;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,6vw,54px);letter-spacing:.04em;line-height:1;color:var(--ink);text-align:center;margin-bottom:14px;}
+h1 .acc{color:var(--copper);}
+.sub{font-size:15px;color:var(--ink-dim);line-height:1.7;text-align:center;max-width:520px;margin:0 auto 48px;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.card{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:6px;padding:28px 22px;cursor:pointer;transition:all .2s;text-decoration:none;display:block;box-shadow:0 1px 4px rgba(26,23,20,.05);border-top:3px solid transparent;}
+.card:hover{border-top-color:var(--copper);transform:translateY(-3px);box-shadow:0 6px 18px rgba(26,23,20,.1);}
+.card-icon{font-size:30px;margin-bottom:14px;}
+.card-type{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);margin-bottom:6px;font-weight:600;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--ink);margin-bottom:8px;line-height:1;}
+.card-desc{font-size:12px;color:var(--ink-dim);line-height:1.6;}
+.card-cta{margin-top:16px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--copper);font-weight:600;}
+.foot{text-align:center;margin-top:40px;font-size:11px;color:var(--ink-dim);}
+.foot a{color:var(--copper-dark);text-decoration:none;}
+.demo-note{background:rgba(184,115,51,.08);border:1px solid rgba(184,115,51,.2);border-radius:4px;padding:12px 16px;margin-top:36px;font-size:11px;color:var(--ink-2);line-height:1.6;text-align:center;}
+@media(max-width:640px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<span class="sear"></span>
+<div class="wrap">
+  <div class="eyebrow">Interactive Demo</div>
+  <h1>SEE IT FOR <span class="acc">YOUR</span> OPERATION</h1>
+  <p class="sub">Hospitality Boss adapts to how you actually run. Pick the model that's closest to your business and explore a live dashboard with sample data.</p>
+
+  <div class="grid">
+    <a href="dashboard.html" class="card">
+      <div class="card-icon">🍽️</div>
+      <div class="card-type">Full Service</div>
+      <div class="card-title">RESTAURANT</div>
+      <div class="card-desc">Sit-down dining with dine-in, buyouts, and delivery channels. Track RevPASH, table turns, prime cost, and commission drag.</div>
+      <div class="card-cta">Open demo →</div>
+    </a>
+
+    <a href="fast-casual.html" class="card">
+      <div class="card-icon">☕</div>
+      <div class="card-type">High Velocity</div>
+      <div class="card-title">FAST CASUAL / CAFÉ</div>
+      <div class="card-desc">Transaction-driven service. Track sales per labor hour, ticket average drift, waste log, and throughput by hour.</div>
+      <div class="card-cta">Open demo →</div>
+    </a>
+
+    <a href="dashboard.html" class="card">
+      <div class="card-icon">🎪</div>
+      <div class="card-type">Events</div>
+      <div class="card-title">CATERING</div>
+      <div class="card-desc">Event-based operation. Build pre-event P&amp;L, price by the head, manage BEOs, and track event-level margin.</div>
+      <div class="card-cta">Open demo →</div>
+    </a>
+  </div>
+
+  <div class="demo-note">
+    ◆ All dashboards show sample data for <strong>Cedar &amp; Vine Catering</strong>, a fictional operation. Nothing here is real financial data.
+  </div>
+
+  <div class="foot">
+    <a href="index.html">← Back to home</a> &nbsp;·&nbsp; <a href="beta-intake.html">Apply for beta access</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitality Boss — Beta Partner Intake</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F5F0E8;--parchment-mid:#EDE8DE;--parchment-deep:#E0D9CC;
+    --cast-iron:#1C1C1C;--cast-iron-mid:#3A3A3A;
+    --copper:#B87333;--copper-light:#D4956A;--copper-dark:#8C5524;
+    --stainless:#6B6560;--white:#FFFFFF;--celery:#7FB069;--spinach:#1B4D3E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--parchment);color:var(--cast-iron);font-family:'Inter',sans-serif;font-weight:300;line-height:1.6;}
+  .sear{display:block;width:100%;height:2px;background:linear-gradient(90deg,transparent 0%,var(--copper) 15%,var(--copper-light) 50%,var(--copper) 85%,transparent 100%);opacity:.85;}
+  .sear-thin{display:block;width:100%;height:1px;background:linear-gradient(90deg,transparent 0%,var(--copper-dark) 20%,var(--copper) 50%,var(--copper-dark) 80%,transparent 100%);opacity:.4;}
+  .demo-banner{background:var(--cast-iron);text-align:center;padding:7px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-light);}
+  .container{max-width:720px;margin:0 auto;padding:0 32px;}
+  .top-bar{padding:24px 0;display:flex;justify-content:space-between;align-items:center;}
+  .logo-mark{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+  .logo-top{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--cast-iron);}
+  .logo-bottom{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--copper);}
+  .logo-sub{font-size:8px;letter-spacing:.25em;color:var(--stainless);text-transform:uppercase;margin-top:3px;}
+  .beta-pill{font-size:9px;letter-spacing:.2em;text-transform:uppercase;background:var(--copper);color:var(--white);padding:6px 14px;font-weight:600;}
+  .hero{padding:60px 0 48px;text-align:center;}
+  .hero .eyebrow{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,7vw,62px);letter-spacing:.06em;color:var(--cast-iron);line-height:1.05;margin-bottom:20px;}
+  .hero h1 .acc{color:var(--copper);}
+  .hero p{font-size:14px;color:var(--stainless);line-height:1.75;max-width:520px;margin:0 auto 28px;}
+  .commit-row{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;}
+  .commit-item{font-size:11px;color:var(--stainless);display:flex;align-items:center;gap:7px;letter-spacing:.05em;}
+  .commit-item::before{content:'◆';color:var(--copper);font-size:7px;}
+  .form-body{padding:48px 0 80px;}
+  .section-block{margin-bottom:48px;}
+  .section-head{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid rgba(184,115,51,.2);}
+  .section-num{width:30px;height:30px;border:1px solid rgba(184,115,51,.4);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--copper);font-weight:600;flex-shrink:0;}
+  .section-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.1em;color:var(--cast-iron);}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--stainless);font-weight:500;margin-bottom:7px;}
+  .field .hint{font-size:11px;color:var(--copper-dark);margin-bottom:7px;font-style:italic;text-transform:none;letter-spacing:0;font-weight:300;}
+  input[type="text"],input[type="email"],input[type="tel"],select,textarea{width:100%;background:var(--white);border:1px solid var(--parchment-deep);color:var(--cast-iron);font-family:'Inter',sans-serif;font-size:14px;font-weight:300;padding:12px 16px;outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:3px;}
+  input:focus,select:focus,textarea:focus{border-color:var(--copper);}
+  select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B87333' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+  textarea{resize:vertical;min-height:90px;line-height:1.6;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .check-group{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+  .check-item{display:flex;align-items:flex-start;gap:13px;cursor:pointer;padding:12px 16px;border:1px solid var(--parchment-deep);background:var(--white);transition:all .15s;border-radius:3px;}
+  .check-item:hover{border-color:rgba(184,115,51,.4);background:var(--parchment-mid);}
+  .check-item input[type="checkbox"]{width:15px;height:15px;flex-shrink:0;margin-top:3px;accent-color:var(--copper);cursor:pointer;}
+  .check-label{font-size:13px;color:var(--cast-iron);line-height:1.4;}
+  .check-sub{font-size:11px;color:var(--stainless);margin-top:2px;}
+  .radio-group{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+  .radio-item{display:flex;align-items:center;gap:13px;cursor:pointer;padding:11px 16px;border:1px solid var(--parchment-deep);background:var(--white);transition:all .15s;border-radius:3px;}
+  .radio-item:hover{border-color:rgba(184,115,51,.4);}
+  .radio-item input[type="radio"]{accent-color:var(--copper);cursor:pointer;flex-shrink:0;}
+  .r-label{font-size:13px;color:var(--cast-iron);}
+  .commit-block{background:var(--parchment-mid);padding:24px;margin-bottom:24px;border-left:3px solid var(--copper);border-radius:0 3px 3px 0;}
+  .commit-block p{font-size:13px;color:var(--stainless);line-height:1.75;}
+  .commit-block strong{color:var(--cast-iron);font-weight:500;}
+  .submit-area{margin-top:40px;padding-top:32px;border-top:1px solid rgba(184,115,51,.2);}
+  .submit-note{font-size:12px;color:var(--stainless);line-height:1.7;margin-bottom:22px;}
+  .submit-note strong{color:var(--cast-iron-mid);font-weight:500;}
+  .submit-btn{width:100%;background:var(--copper);color:var(--white);border:none;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.18em;padding:18px 32px;cursor:pointer;transition:background .2s;border-radius:3px;}
+  .submit-btn:hover{background:var(--copper-light);}
+  .success-screen{display:none;text-align:center;padding:80px 32px;max-width:540px;margin:0 auto;}
+  .success-screen .s-icon{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--copper);margin-bottom:20px;letter-spacing:.1em;}
+  .success-screen h2{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:.08em;color:var(--cast-iron);margin-bottom:16px;}
+  .success-screen h2 .acc{color:var(--copper);}
+  .success-screen p{font-size:14px;color:var(--stainless);line-height:1.75;}
+  .next-steps{margin-top:36px;text-align:left;border:1px solid rgba(184,115,51,.2);background:var(--parchment-mid);padding:28px;border-radius:4px;}
+  .ns-label{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;font-weight:500;}
+  .ns-item{display:flex;gap:14px;margin-bottom:14px;font-size:13px;color:var(--stainless);line-height:1.5;}
+  .ns-num{color:var(--copper);font-weight:600;flex-shrink:0;}
+  .page-footer{background:var(--parchment-mid);padding:32px 0;}
+  .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .footer-tagline{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper-dark);}
+  .footer-copy{font-size:11px;color:var(--stainless);letter-spacing:.08em;}
+  @media(max-width:580px){.container{padding:0 20px;}.two-col{grid-template-columns:1fr;}.commit-row{flex-direction:column;align-items:center;gap:12px;}}
+</style>
+</head>
+<body>
+<div class="demo-banner">◆ Preview Form · Submissions Are Not Yet Collected</div>
+<span class="sear"></span>
+<div class="container">
+  <div class="top-bar">
+    <a href="index.html" class="logo-mark">
+      <span class="logo-top">HOSPITALITY</span>
+      <span class="logo-bottom">BOSS</span>
+      <span class="logo-sub">Featuring Culinary IQ™</span>
+    </a>
+    <div class="beta-pill">Beta Partner Access</div>
+  </div>
+</div>
+<span class="sear-thin"></span>
+
+<div id="formView">
+  <div class="container">
+    <div class="hero">
+      <div class="eyebrow">Founding Partner Program — Beta Cohort</div>
+      <h1>LET'S SEE WHAT YOUR<br>BUSINESS IS <span class="acc">REALLY</span><br>TELLING YOU.</h1>
+      <p>Join the founding cohort of Hospitality Boss — free access during beta in exchange for real feedback from a real operator. Fill this out and we'll have you running within the week.</p>
+      <div class="commit-row">
+        <div class="commit-item">Free during beta</div>
+        <div class="commit-item">No credit card required</div>
+        <div class="commit-item">Your data stays yours</div>
+      </div>
+    </div>
+  </div>
+  <span class="sear-thin"></span>
+
+  <div class="container">
+    <div class="form-body">
+      <div class="section-block">
+        <div class="section-head"><div class="section-num">1</div><div class="section-title">About You</div></div>
+        <div class="two-col">
+          <div class="field"><label>First Name</label><input type="text" placeholder="First name"></div>
+          <div class="field"><label>Last Name</label><input type="text" placeholder="Last name"></div>
+        </div>
+        <div class="field"><label>Email Address</label><input type="email" placeholder="you@yourbusiness.com"></div>
+        <div class="field"><label>Your Role</label>
+          <select><option value="" disabled selected>Select your role</option><option>Owner / Operator</option><option>Executive Chef</option><option>Chef-Owner</option><option>General Manager</option><option>Operations Director</option><option>Other</option></select>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-head"><div class="section-num">2</div><div class="section-title">Your Business</div></div>
+        <div class="field"><label>Business Name</label><input type="text" placeholder="e.g. Cedar &amp; Vine Catering"></div>
+        <div class="field"><label>Primary Business Type</label>
+          <select id="bizType"><option value="" disabled selected>Select type</option><option>Full-Service Catering</option><option>Drop-Off / Delivery Catering</option><option>Sit-Down Restaurant</option><option>Fast Casual / Café</option><option>Private Chef Services</option><option>Event Production &amp; Catering</option><option>Ghost Kitchen / Virtual Brand</option><option>Multi-Concept / Multiple</option></select>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Locations / Entities</label>
+            <select><option value="" disabled selected>Select</option><option>Just 1 — solo</option><option>2–3</option><option>4–6</option><option>7 or more</option></select>
+          </div>
+          <div class="field"><label>Years in Business</label>
+            <select><option value="" disabled selected>Select</option><option>Under 1 year</option><option>1–3 years</option><option>4–7 years</option><option>8–15 years</option><option>15+ years</option></select>
+          </div>
+        </div>
+        <div class="field"><label>Annual Revenue Range</label>
+          <div class="hint">Approximate is fine — helps us calibrate.</div>
+          <select><option value="" disabled selected>Select range</option><option>Under $150K</option><option>$150K – $500K</option><option>$500K – $1M</option><option>$1M – $3M</option><option>$3M – $7M</option><option>$7M+</option></select>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-head"><div class="section-num">3</div><div class="section-title">Where You Want Help</div></div>
+        <div class="field"><label>What's keeping you up at night? (check all that apply)</label>
+          <div class="check-group">
+            <label class="check-item"><input type="checkbox"><div><div class="check-label">I don't know if my pricing is actually profitable</div></div></label>
+            <label class="check-item"><input type="checkbox"><div><div class="check-label">My labor costs feel out of control</div></div></label>
+            <label class="check-item"><input type="checkbox"><div><div class="check-label">I'm making revenue but not seeing it in cash</div></div></label>
+            <label class="check-item"><input type="checkbox"><div><div class="check-label">I can't get a clear picture of my actual margins</div></div></label>
+            <label class="check-item"><input type="checkbox"><div><div class="check-label">My food cost keeps creeping up and I don't know why</div></div></label>
+            <label class="check-item"><input type="checkbox"><div><div class="check-label">I need systems and SOPs — it's too dependent on me</div></div></label>
+          </div>
+        </div>
+        <div class="field" style="margin-top:24px;"><label>In Your Own Words</label>
+          <div class="hint">What's the one thing you most want clarity on?</div>
+          <textarea placeholder="e.g. I run 3 events a week and still feel like I'm barely breaking even..."></textarea>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-head"><div class="section-num">4</div><div class="section-title">Beta Partner Commitment</div></div>
+        <div class="commit-block"><p>In exchange for <strong>free access during beta</strong>, we ask three things from our founding partners. These aren't fine print — they're what makes the platform better for every operator who comes after you.</p></div>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox"><div><div class="check-label">I'll use the platform actively and bring real questions</div><div class="check-sub">Actually put it to work on real problems</div></div></label>
+          <label class="check-item"><input type="checkbox"><div><div class="check-label">I'll give honest feedback — what works, what doesn't</div><div class="check-sub">A 15-minute check-in once a month during beta</div></div></label>
+          <label class="check-item"><input type="checkbox"><div><div class="check-label">If it helps my business, I'm open to sharing what I found</div><div class="check-sub">No pressure — only if it genuinely delivers value</div></div></label>
+        </div>
+      </div>
+
+      <div class="submit-area">
+        <p class="submit-note"><strong>What happens next:</strong> You'll hear from us within 48 hours with your access link and a short onboarding call to get your business context loaded in. No spam, no sales pressure.</p>
+        <button class="submit-btn" onclick="handleSubmit()">SUBMIT MY BETA APPLICATION →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="successView" class="success-screen">
+  <div class="s-icon">◆ HOSPITALITY BOSS ◆</div>
+  <h2>YOU'RE <span class="acc">IN.</span></h2>
+  <p>Welcome to the founding cohort. You'll hear from us within 48 hours — we're looking forward to seeing what your numbers reveal.</p>
+  <div class="next-steps">
+    <div class="ns-label">What Happens Next</div>
+    <div class="ns-item"><span class="ns-num">01</span><span>Confirmation email within the hour</span></div>
+    <div class="ns-item"><span class="ns-num">02</span><span>20-minute onboarding call to load your business context</span></div>
+    <div class="ns-item"><span class="ns-num">03</span><span>Full platform access — bring your real questions</span></div>
+    <div class="ns-item"><span class="ns-num">04</span><span>Monthly check-in to shape what gets built next</span></div>
+  </div>
+  <p style="margin-top:28px;font-size:12px;"><a href="demo-router.html" style="color:var(--copper-dark);text-decoration:none;">Explore the live demo while you wait →</a></p>
+</div>
+
+<span class="sear"></span>
+<div class="page-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="logo-mark">
+        <span class="logo-top" style="font-size:17px;">HOSPITALITY</span>
+        <span class="logo-bottom" style="font-size:17px;">BOSS</span>
+        <span class="logo-sub">Featuring Culinary IQ™</span>
+      </div>
+      <div class="footer-tagline">Built by an operator. Built for operators.</div>
+      <div class="footer-copy">© 2026 Hospitality Boss · Preview</div>
+    </div>
+  </div>
+</div>
+<span class="sear"></span>
+
+<script>
+  function handleSubmit(){
+    document.getElementById('formView').style.display='none';
+    document.getElementById('successView').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+</script>
+</body>
+</html>

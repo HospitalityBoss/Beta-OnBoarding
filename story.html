@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitality Boss — The Story</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#F5F0E8;--parchment-mid:#EDE8DE;--parchment-deep:#E0D9CC;
+    --cast-iron:#1C1C1C;--cast-iron-mid:#3A3A3A;
+    --copper:#B87333;--copper-light:#D4956A;--copper-dark:#8C5524;
+    --stainless:#6B6560;--celery:#7FB069;--spinach:#1B4D3E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--parchment);color:var(--cast-iron);font-family:'Inter',sans-serif;font-weight:300;line-height:1.6;}
+  .sear{display:block;width:100%;height:2px;background:linear-gradient(90deg,transparent 0%,var(--copper) 15%,var(--copper-light) 50%,var(--copper) 85%,transparent 100%);opacity:.85;}
+  .sear-thin{display:block;width:100%;height:1px;background:linear-gradient(90deg,transparent 0%,var(--copper-dark) 20%,var(--copper) 50%,var(--copper-dark) 80%,transparent 100%);opacity:.35;}
+  .demo-banner{background:var(--cast-iron);text-align:center;padding:7px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-light);}
+  .top-bar{padding:18px 48px;border-bottom:1px solid var(--parchment-deep);display:flex;justify-content:space-between;align-items:center;}
+  .logo-mark{display:flex;flex-direction:column;line-height:1;text-decoration:none;}
+  .logo-top{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.12em;color:var(--cast-iron);}
+  .logo-bottom{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.12em;color:var(--copper);}
+  .logo-sub{font-size:7px;letter-spacing:.25em;color:var(--stainless);text-transform:uppercase;margin-top:3px;}
+  .doc-label{font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--stainless);}
+  .hero{max-width:820px;margin:0 auto;padding:72px 48px 56px;border-bottom:1px solid var(--parchment-deep);}
+  .hero .eyebrow{font-size:10px;letter-spacing:.4em;text-transform:uppercase;color:var(--copper);margin-bottom:20px;}
+  .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,6vw,56px);letter-spacing:.06em;line-height:1.05;color:var(--cast-iron);margin-bottom:24px;}
+  .hero h1 em{color:var(--copper);font-style:italic;font-family:'Inter',sans-serif;font-weight:300;}
+  .hero .deck{font-size:16px;line-height:1.75;color:var(--stainless);max-width:560px;font-style:italic;}
+  .story-body{max-width:660px;margin:0 auto;padding:60px 48px 80px;}
+  .pull-quote{border-left:3px solid var(--copper);padding:4px 0 4px 26px;margin:40px 0;}
+  .pull-quote p{font-family:'Bebas Neue',sans-serif;font-size:clamp(18px,3vw,24px);letter-spacing:.06em;line-height:1.3;color:var(--cast-iron);}
+  .pull-quote .attr{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);margin-top:10px;font-weight:500;}
+  .section-marker{display:flex;align-items:center;gap:14px;margin:44px 0 18px;}
+  .mark-line{width:28px;height:1px;background:var(--copper);}
+  .mark-label{font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--copper);font-weight:500;}
+  .story-body p{font-size:15px;line-height:1.9;color:var(--cast-iron-mid);margin-bottom:20px;}
+  .story-body p strong{color:var(--cast-iron);font-weight:500;}
+  .callout-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin:40px 0;background:var(--parchment-deep);}
+  .callout-item{background:var(--parchment);padding:22px 18px;text-align:center;}
+  .c-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--copper);line-height:1;margin-bottom:5px;}
+  .c-label{font-size:11px;color:var(--stainless);line-height:1.4;}
+  .mission-block{background:var(--parchment-mid);border:1px solid var(--parchment-deep);border-left:3px solid var(--copper);padding:32px 28px;margin:48px 0 0;}
+  .mission-block .m-label{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--copper);margin-bottom:14px;font-weight:500;}
+  .mission-block p{font-size:clamp(14px,2vw,17px);color:var(--cast-iron);line-height:1.7;margin-bottom:0;font-style:italic;}
+  footer{border-top:1px solid var(--parchment-deep);padding:26px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  footer .f-left{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--cast-iron);}
+  footer .f-left span{color:var(--copper);}
+  footer .f-right{font-size:10px;color:var(--stainless);letter-spacing:.1em;}
+  .back-link{display:inline-block;margin-bottom:24px;font-size:11px;letter-spacing:.1em;color:var(--copper-dark);text-decoration:none;}
+  @media(max-width:600px){.top-bar,.hero,.story-body,footer{padding-left:20px;padding-right:20px;}.callout-row{grid-template-columns:1fr;}.hero{padding-top:44px;}}
+</style>
+</head>
+<body>
+<div class="demo-banner">◆ Preview Site · Not Yet Live</div>
+<span class="sear"></span>
+<div class="top-bar">
+  <a href="index.html" class="logo-mark">
+    <div class="logo-top">HOSPITALITY</div>
+    <div class="logo-bottom">BOSS</div>
+    <div class="logo-sub">Featuring Culinary IQ™</div>
+  </a>
+  <div class="doc-label">Our Story</div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">The Story Behind the Platform</div>
+  <h1>Built by someone who<br><em>learned it the hard way.</em></h1>
+  <p class="deck">Every feature in this platform exists because someone lived through what it was designed to prevent. That someone is the operator who built it.</p>
+</div>
+
+<div class="story-body">
+  <a href="index.html" class="back-link">← Back to home</a>
+  <div class="section-marker"><div class="mark-line"></div><div class="mark-label">The Beginning</div></div>
+  <p>There is a kind of knowledge that only comes from years inside a kitchen — from the heat, the pace, the craft, the chaos. It lives in your hands and your instincts. It's the knowledge of how to feed people well, how to run a team under pressure, how to build something guests come back to. It is hard-won and deeply personal.</p>
+  <p>For decades, that's what this was about. Building culinary programs. Growing teams. Taking concepts from idea to execution — catering operations, corporate accounts, athlete nutrition, in-flight meal programs, event production. The work of a hospitality operator who loved the craft and knew how to deliver at a high level.</p>
+  <p>The businesses grew. The reputation grew. And so did the complexity — the payroll, the vendors, the entities, the events running simultaneously across multiple markets. And somewhere in the growth, a different kind of problem began to take shape. One that had nothing to do with the food.</p>
+
+  <div class="pull-quote">
+    <p>THE FOOD WAS NEVER THE PROBLEM. THE NUMBERS I COULDN'T SEE — THOSE WERE THE PROBLEM.</p>
+    <div class="attr">Our Founder · Executive Chef</div>
+  </div>
+
+  <div class="section-marker"><div class="mark-line"></div><div class="mark-label">The Blind Spot</div></div>
+  <p>The hospitality industry has a quiet epidemic. Brilliant operators — people who can execute a 500-person gala or price a menu for peak profitability in their sleep — are running businesses without clear financial visibility. Not because they're careless. Because nobody ever taught them what to look for. Because the tools built for restaurants weren't built for caterers. Because the numbers that matter most — <strong>true labor cost, payroll tax burden, paper goods creep, fuel and delivery exposure, food cost drift</strong> — are buried in spreadsheets, invoices, and gut feelings.</p>
+  <p>The result is a business that looks healthy on the surface and is slowly bleeding underneath. The events are full. The clients are happy. And the margin is gone before anyone notices.</p>
+
+  <div class="callout-row">
+    <div class="callout-item"><div class="c-num">60%</div><div class="c-label">of independent restaurants fail within their first year</div></div>
+    <div class="callout-item"><div class="c-num">80%</div><div class="c-label">cite financial mismanagement as a contributing factor</div></div>
+    <div class="callout-item"><div class="c-num">$0</div><div class="c-label">cost of catching a problem before it becomes a crisis</div></div>
+  </div>
+
+  <div class="section-marker"><div class="mark-line"></div><div class="mark-label">The Breaking Point</div></div>
+  <p>When the financial picture isn't clear, operators make decisions without complete information. They borrow based on cash flow they think they have. They accept terms they don't fully understand. Merchant cash advances with effective rates north of 40%. Daily repayment structures that strangle working capital. Loan stacking that compounds faster than any revenue growth can offset.</p>
+  <p>This isn't a story about irresponsibility. It's a story about what happens when a talented operator — one running real businesses with real clients and real people on payroll — doesn't have the financial clarity that should have been there from the start. <strong>The debt wasn't the disease. The lack of visibility was.</strong></p>
+  <p>Living through that produced something no business school course could replicate: a deep, real-world understanding of every hidden cost, every dangerous blind spot, and every moment where the right information at the right time could have changed everything.</p>
+
+  <div class="pull-quote">
+    <p>I WANT TO BUILD WHAT I NEEDED. SO THAT THE NEXT OPERATOR DOESN'T HAVE TO LEARN IT THE WAY I DID.</p>
+    <div class="attr">Our Founder · Executive Chef</div>
+  </div>
+
+  <div class="section-marker"><div class="mark-line"></div><div class="mark-label">The Platform</div></div>
+  <p>Hospitality Boss is an AI-powered business intelligence and consulting platform built from the inside out — by an operator, for operators. It's not a generic business tool dressed up with hospitality language. It's built on decades of real operational knowledge: real menus, real SOPs, real event structures, real financial pain points that only someone who has lived them would know to address.</p>
+  <p>The platform gives independent chefs, caterers, and multi-unit operators an always-on advisor that understands their world — surfacing hidden labor costs, flagging food cost drift, challenging underpriced events, optimizing staffing ratios, and walking an operator through the financial picture of their business in plain language, not accounting jargon.</p>
+  <p>And down the road, the vision goes further: connecting operators to their actual financial data through integrations like QuickBooks, building a lending readiness pathway that makes hospitality operators bankable — through legitimate capital from community banks, SBA lenders, and CDFIs who want to serve this industry.</p>
+
+  <div class="mission-block">
+    <div class="m-label">The Mission</div>
+    <p>Operators don't fail because they can't cook. They fail because nobody showed them the numbers that mattered before it was too late. Hospitality Boss exists to change that — one operator at a time, starting with the ones who remind us most of where we've been.</p>
+  </div>
+</div>
+
+<span class="sear-thin"></span>
+<footer>
+  <div class="f-left">HOSPITALITY <span>BOSS</span></div>
+  <div class="f-right">Preview Site · Confidential Draft</div>
+</footer>
+<span class="sear"></span>
+</body>
+</html>
