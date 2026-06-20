@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospitality Boss — Culinary IQ Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cast-iron:#1C1C1C;--forge-deep:#141414;--ember:#231A14;
+  --copper:#B87333;--copper-light:#D4956A;--copper-dark:#8C5524;
+  --stainless:#2C2C2C;--stainless-dim:#555555;--forge-white:#F0EDE8;
+  --tomato:#C0392B;--spinach:#1B4D3E;--celery:#4A8C3F;
+  --saffron:#C8860A;--plantain:#B89400;--beet:#8B2252;
+  --rail-w:228px;
+  /* Light mode surface tokens */
+  --surface-bg:#F4F2EE;
+  --surface-card:#FFFFFF;
+  --surface-card-alt:#FAF8F5;
+  --surface-mid:#EDE9E3;
+  --surface-border:#DDD8CF;
+  --ink-primary:#1A1714;
+  --ink-secondary:#4A4540;
+  --ink-dim:#7A7268;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--surface-bg);color:var(--ink-primary);font-family:'Inter',sans-serif;font-weight:300;}
+.sear{display:block;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--copper),var(--copper-light),var(--copper),transparent);opacity:.85;}
+.screen{position:fixed;inset:0;z-index:10;transition:opacity .4s,transform .4s;}
+.screen.hidden{opacity:0;pointer-events:none;transform:scale(.98);}
+
+/* LOGIN */
+#screen-login{background:var(--parchment);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.login-bg::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 20% 30%,rgba(184,115,51,.07),transparent 60%),radial-gradient(ellipse 50% 60% at 80% 70%,rgba(192,57,43,.05),transparent 60%);}
+.login-card{position:relative;z-index:1;width:420px;text-align:center;}
+.wm-top{font-family:'Bebas Neue',sans-serif;font-size:54px;letter-spacing:6px;color:var(--ink-primary);}
+.wm-rule{width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--copper),var(--copper-light),var(--copper),transparent);margin:4px 0;}
+.wm-bot{font-family:'Bebas Neue',sans-serif;font-size:54px;letter-spacing:6px;color:var(--copper);}
+.login-powered{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--stainless-dim);margin-bottom:32px;}
+.login-powered span{color:var(--copper-light);}
+.login-form{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;padding:32px;box-shadow:0 2px 12px rgba(26,23,20,.06);}
+.login-form input{width:100%;background:var(--white,#FFFFFF);border:1px solid var(--warm-border);border-radius:2px;padding:12px 16px;color:var(--ink-primary);font-family:'Inter',sans-serif;font-size:13px;margin-bottom:10px;outline:none;transition:border-color .2s;}
+.login-form input:focus{border-color:var(--copper);}
+.login-form input::placeholder{color:var(--stainless-dim);}
+.login-btn{width:100%;padding:14px;background:var(--copper);color:#FFFFFF;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;border:none;border-radius:2px;cursor:pointer;transition:all .2s;margin-top:4px;}
+.login-btn:hover{background:var(--copper-light);}
+.login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--ink-dim,#7A7268);font-size:9px;letter-spacing:2px;text-transform:uppercase;}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--warm-border);}
+.demo-roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.demo-role-btn{padding:12px 8px;background:var(--warm-light);border:1px solid var(--warm-border);border-radius:2px;color:var(--ink-secondary,#4A4540);font-size:10px;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif;}
+.demo-role-btn:hover{border-color:var(--copper);color:var(--copper-light);}
+.role-icon{display:block;font-size:18px;margin-bottom:5px;}
+
+/* APP SHELL */
+#screen-app{display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.topnav{height:54px;background:var(--forge-deep);border-bottom:2px solid var(--surface-border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;position:relative;z-index:50;}
+.tb-top{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:var(--forge-white);}
+.tb-bot{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:var(--copper);}
+.nav-div{width:1px;height:28px;background:rgba(0,0,0,.08);}
+.nav-iq{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--stainless-dim);}
+.nav-iq span{color:var(--copper-light);}
+.search-wrap{flex:1;max-width:340px;position:relative;margin-left:12px;}
+.search-wrap::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--stainless-dim);font-size:13px;pointer-events:none;}
+.topnav-search{width:100%;background:var(--surface-card);border:1px solid var(--surface-border);border-radius:2px;padding:7px 14px 7px 30px;color:var(--forge-white);font-family:'Inter',sans-serif;font-size:12px;outline:none;}
+.topnav-search::placeholder{color:var(--stainless-dim);}
+.nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+
+/* CRITICAL CASH BADGE */
+.cash-badge{display:flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.4);border-radius:2px;cursor:pointer;}
+.cb-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tomato);}
+.cb-value{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--tomato);}
+.cb-pulse{width:6px;height:6px;background:var(--tomato);border-radius:50%;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.alert-bell{position:relative;padding:7px 10px;background:var(--ember);border:1px solid rgba(192,57,43,.3);border-radius:2px;cursor:pointer;font-size:14px;}
+.alert-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:var(--tomato);border-radius:50%;animation:pulse 1.5s infinite;}
+.user-pill{display:flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;background:var(--surface-card);border:1px solid var(--surface-border);border-radius:100px;cursor:pointer;}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--copper),var(--copper-dark));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--forge-deep);font-family:'Bebas Neue',sans-serif;letter-spacing:1px;}
+.user-name{font-size:11px;color:var(--stainless);}
+.user-role{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--copper);}
+
+/* APP BODY */
+.app-body{display:flex;flex:1;overflow:hidden;}
+
+/* RAIL */
+.rail{width:var(--rail-w);background:var(--forge-deep);border-right:1px solid rgba(184,115,51,.12);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
+.rail-logo-band{padding:14px 16px 12px;border-bottom:1px solid rgba(184,115,51,.12);text-align:center;}
+.rlb-top{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--stainless-dim);margin-bottom:2px;}
+.rlb-iq{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:3px;color:var(--copper-light);}
+.rail-section-label{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--stainless-dim);padding:12px 16px 4px;}
+.rail-item{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:all .15s;border-left:2px solid transparent;color:var(--stainless-dim);font-size:12px;}
+.rail-item:hover{background:rgba(184,115,51,.05);color:var(--stainless);}
+.rail-item.active{background:rgba(184,115,51,.08);color:var(--copper-light);border-left-color:var(--copper);}
+.rail-icon{font-size:13px;width:18px;text-align:center;flex-shrink:0;}
+.rail-div{height:1px;background:rgba(0,0,0,.06);margin:4px 0;}
+
+/* RAIL ALERTS */
+.rail-alert{margin:3px 10px;padding:8px 10px;border-left:3px solid;border-radius:0 2px 2px 0;font-size:10px;color:var(--stainless-dim);line-height:1.5;background:rgba(0,0,0,.2);}
+.rail-alert .ral{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
+.rail-alert.tomato{border-color:var(--tomato);}.rail-alert.tomato .ral{color:var(--tomato);}
+.rail-alert.saffron{border-color:var(--saffron);}.rail-alert.saffron .ral{color:var(--saffron);}
+.rail-alert.celery{border-color:var(--celery);}.rail-alert.celery .ral{color:var(--celery);}
+.rail-bottom{margin-top:auto;padding:10px;border-top:1px solid rgba(255,255,255,.05);}
+.rail-bottom-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:2px;cursor:pointer;font-size:11px;color:var(--stainless-dim);}
+.rail-bottom-btn:hover{background:rgba(255,255,255,.04);color:var(--forge-white);}
+
+/* MAIN CONTENT */
+.main-content{flex:1;overflow-y:auto;background:var(--surface-bg);}
+.view{display:none;padding:22px 26px 32px;}
+.view.active{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* VIEW HEADER */
+.view-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--surface-border);}
+.view-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:2px;color:var(--ink-primary);line-height:1;}
+.view-title em{color:var(--copper);font-style:normal;}
+.view-sub{font-size:11px;color:var(--ink-dim);margin-top:4px;}
+.ctrl-row{display:flex;gap:6px;}
+.ctrl{padding:6px 12px;background:var(--surface-card);border:1px solid var(--surface-border);border-radius:2px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.ctrl:hover{color:var(--ink-primary);border-color:var(--copper);}
+.ctrl.on{color:var(--copper-dark);border-color:var(--copper);background:rgba(184,115,51,.08);font-weight:600;}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px;}
+.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:12px;}
+.g6040{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:12px;}
+.mb12{margin-bottom:12px;}
+
+/* KPI */
+.kpi{background:var(--surface-card);border:1px solid var(--surface-border);border-radius:3px;padding:14px 16px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;}
+.kpi.copper::after{background:linear-gradient(90deg,var(--copper-dark),var(--copper-light));}
+.kpi.tomato::after{background:var(--tomato);}
+.kpi.celery::after{background:var(--celery);}
+.kpi.saffron::after{background:var(--saffron);}
+.kpi.spinach::after{background:var(--spinach);}
+.kpi.beet::after{background:var(--beet);}
+.kpi.steel::after{background:#3a5f8a;}
+.kpi-label{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:7px;}
+.kpi-value{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;line-height:1;color:var(--ink-primary);margin-bottom:3px;}
+.kpi-sub{font-size:10px;color:var(--ink-dim);}
+.kpi-delta{font-size:9px;letter-spacing:.3px;margin-top:4px;}
+.kpi-delta.up{color:var(--celery);}
+.kpi-delta.dn{color:var(--tomato);}
+.kpi-delta.wr{color:var(--saffron);}
+
+/* CARD */
+.card{background:var(--surface-card);border:1px solid var(--surface-border);border-radius:3px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+.card-title{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.flag{font-size:7px;letter-spacing:1px;padding:2px 6px;border-radius:2px;}
+.flag-tomato{background:rgba(192,57,43,.12);color:var(--tomato);border:1px solid rgba(192,57,43,.25);}
+.flag-celery{background:rgba(143,200,122,.1);color:var(--celery);border:1px solid rgba(143,200,122,.25);}
+.flag-saffron{background:rgba(240,174,34,.1);color:var(--saffron);border:1px solid rgba(240,174,34,.25);}
+.flag-copper{background:rgba(184,115,51,.1);color:var(--copper-light);border:1px solid rgba(184,115,51,.25);}
+
+/* TABLE */
+.et{width:100%;border-collapse:collapse;}
+.et th{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);padding:0 8px 8px 0;text-align:right;border-bottom:2px solid var(--surface-border);}
+.et th:first-child{text-align:left;}
+.et td{padding:8px 8px 8px 0;text-align:right;border-bottom:1px solid var(--surface-border);font-size:10px;color:var(--ink-secondary);letter-spacing:.3px;}
+.et td:first-child{text-align:left;font-size:11px;color:var(--ink-primary);font-weight:500;}
+.et tr:last-child td{border-bottom:none;}
+.et tr:hover td{background:rgba(184,115,51,.06);}
+.c-celery{color:var(--celery)!important;}
+.c-tomato{color:var(--tomato)!important;}
+.c-saffron{color:var(--saffron)!important;}
+.c-copper{color:var(--copper-light)!important;}
+.c-dim{color:var(--stainless-dim)!important;font-style:italic;font-size:9px!important;}
+
+/* BAR ROW */
+.br{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.br:last-child{margin-bottom:0;}
+.br-label{font-size:11px;color:var(--ink-primary);flex:1;}
+.br-label small{display:block;font-size:9px;color:var(--stainless-dim);margin-top:1px;}
+.br-track{width:130px;height:5px;background:rgba(0,0,0,.08);border-radius:1px;overflow:hidden;flex-shrink:0;}
+.br-fill{height:100%;border-radius:1px;transition:width 1s ease;}
+.br-val{font-size:10px;color:var(--ink-dim);width:68px;text-align:right;flex-shrink:0;}
+
+/* INSIGHT */
+.insight{padding:10px 12px;border-left:3px solid;font-size:11px;line-height:1.6;color:var(--ink-secondary);margin-bottom:8px;border-radius:0 2px 2px 0;}
+.insight:last-child{margin-bottom:0;}
+.insight strong{color:var(--ink-primary);font-weight:600;}
+.insight.tomato{border-color:var(--tomato);background:rgba(192,57,43,.05);}
+.insight.saffron{border-color:var(--saffron);background:rgba(200,134,10,.06);}
+.insight.celery{border-color:var(--celery);background:rgba(74,140,63,.06);}
+.insight.copper{border-color:var(--copper);background:rgba(184,115,51,.06);}
+.insight.spinach{border-color:var(--spinach);background:rgba(27,77,62,.06);}
+
+/* CASH FLOW ROWS */
+.cf-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr 90px 90px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--surface-border);}
+.cf-row.hdr{padding-bottom:6px;border-bottom:1px solid rgba(184,115,51,.15);}
+.cf-row:last-child{border-bottom:none;}
+.cf-wk{font-size:10px;letter-spacing:.3px;color:var(--ink-primary);}
+.cf-hdr-label{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);text-align:right;}
+.cf-hdr-label:first-child{text-align:left;}
+.cf-val{font-size:10px;text-align:right;letter-spacing:.3px;color:var(--ink-secondary);}
+.cf-bal{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;text-align:right;}
+.cf-status{font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-radius:2px;text-align:center;font-weight:600;}
+.status-ok{background:rgba(143,200,122,.1);color:var(--celery);}
+.status-watch{background:rgba(240,174,34,.1);color:var(--saffron);}
+.status-tight{background:rgba(240,174,34,.15);color:var(--saffron);}
+.status-danger{background:rgba(192,57,43,.15);color:var(--tomato);}
+.status-critical{background:rgba(192,57,43,.2);color:var(--tomato);animation:pulse 2s infinite;}
+
+/* ENTITY STATUS CARDS */
+.entity-card{background:var(--surface-card-alt);border:1px solid var(--surface-border);border-radius:3px;padding:14px;border-top:2px solid;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.entity-card.above{border-top-color:var(--celery);}
+.entity-card.below{border-top-color:var(--tomato);}
+.entity-card.watch{border-top-color:var(--saffron);}
+.ec-name{font-size:12px;color:var(--ink-primary);font-weight:600;margin-bottom:3px;}
+.ec-market{font-size:9px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.ec-row{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px;}
+.ec-key{color:var(--ink-dim);}
+.ec-val{color:var(--ink-secondary);font-weight:500;}
+.ec-gap{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;margin-top:8px;}
+
+/* WEEK BARS */
+.week-bar-wrap{margin-bottom:6px;}
+.week-bar-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--stainless-dim);display:flex;justify-content:space-between;margin-bottom:3px;}
+.week-bar-track{height:8px;background:rgba(0,0,0,.06);border-radius:1px;overflow:hidden;position:relative;}
+.week-bar-fill{height:100%;border-radius:1px;transition:width 1s ease;}
+.week-bar-marker{position:absolute;top:0;bottom:0;width:2px;background:rgba(184,115,51,.5);border-radius:1px;}
+
+/* ALERT PANEL */
+.alert-panel{position:fixed;top:54px;right:0;bottom:0;width:320px;background:var(--surface-card);border-left:2px solid var(--surface-border);box-shadow:-4px 0 20px rgba(0,0,0,.12);z-index:40;transform:translateX(100%);transition:transform .3s;overflow-y:auto;padding:18px;}
+.alert-panel.open{transform:translateX(0);}
+.ap-title{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:14px;display:flex;justify-content:space-between;}
+.ap-close{cursor:pointer;color:var(--ink-dim);font-size:16px;}
+.ap-close:hover{color:var(--ink-primary);}
+.a-item{padding:10px 12px;border-left:3px solid;margin-bottom:7px;font-size:11px;line-height:1.55;color:var(--ink-secondary);}
+.a-item strong{color:var(--ink-primary);display:block;margin-bottom:2px;font-size:11px;}
+.a-item.tomato{border-color:var(--tomato);background:rgba(192,57,43,.05);}
+.a-item.saffron{border-color:var(--saffron);background:rgba(200,134,10,.06);}
+.a-item.celery{border-color:var(--celery);background:rgba(74,140,63,.06);}
+.a-item.copper{border-color:var(--copper);background:rgba(184,115,51,.06);}
+.a-ts{font-size:7px;letter-spacing:1px;color:var(--ink-dim);margin-top:4px;text-transform:uppercase;}
+
+/* MONTH BARS */
+.month-bars{display:flex;align-items:flex-end;gap:5px;height:80px;margin-bottom:8px;}
+.mb-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.mb-bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end;}
+.mb-bar{width:100%;border-radius:1px 1px 0 0;min-height:3px;cursor:pointer;position:relative;}
+.mb-bar::after{content:attr(data-v);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--ember);border:1px solid rgba(184,115,51,.3);padding:2px 6px;font-size:9px;color:var(--forge-white);border-radius:2px;white-space:nowrap;margin-bottom:3px;opacity:0;transition:opacity .2s;pointer-events:none;}
+.mb-bar:hover::after{opacity:1;}
+.mb-label{font-size:7px;letter-spacing:1.5px;color:var(--stainless-dim);text-transform:uppercase;}
+
+/* REPORT CARDS */
+.report-card{background:var(--surface-card);border:1px solid var(--surface-border);border-radius:3px;padding:14px;cursor:pointer;transition:all .2s;text-decoration:none;display:block;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+.report-card:hover{border-color:var(--copper);background:rgba(184,115,51,.04);transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.1);}
+.rc-icon{font-size:18px;margin-bottom:7px;}
+.rc-title{font-size:11px;color:var(--ink-primary);font-weight:600;margin-bottom:3px;}
+.rc-desc{font-size:10px;color:var(--ink-secondary);line-height:1.5;}
+.rc-freq{font-size:7px;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);margin-top:5px;}
+
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--surface-bg);}::-webkit-scrollbar-thumb{background:rgba(184,115,51,.4);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
+  <div class="login-bg"></div>
+  <span class="sear" style="position:fixed;top:0;left:0;right:0;z-index:2"></span>
+  <div class="login-card">
+    <div style="font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--stainless-dim);margin-bottom:4px">Powered by</div>
+    <div class="wm-top">HOSPITALITY</div>
+    <div class="wm-rule"></div>
+    <div class="wm-bot">BOSS</div>
+    <div class="login-powered">Featuring <span>Culinary IQ&#8482;</span></div>
+    <div class="login-form">
+      <input type="email" placeholder="Email address"/>
+      <input type="password" placeholder="Password"/>
+      <button class="login-btn" onclick="launch('executive')">SIGN IN</button>
+      <div class="login-divider">or demo as</div>
+      <div class="demo-roles">
+        <div class="demo-role-btn" onclick="launch('executive')"><span class="role-icon">&#127962;</span>Owner</div>
+        <div class="demo-role-btn" onclick="launch('culinary')"><span class="role-icon">&#127859;</span>Chef</div>
+        <div class="demo-role-btn" onclick="launch('foh')"><span class="role-icon">&#127863;</span>Operations</div>
+        <div class="demo-role-btn" onclick="launch('finance')"><span class="role-icon">&#128202;</span>Revenue & Finance</div>
+      </div>
+    </div>
+    <div style="margin-top:16px;font-size:11px;color:var(--ink-dim)"><span style="color:var(--copper);cursor:pointer" onclick="launch('executive')">Begin platform demo &#8594;</span></div>
+  </div>
+  <span class="sear" style="position:fixed;bottom:0;left:0;right:0;z-index:2"></span>
+</div>
+
+<!-- APP -->
+<div class="screen hidden" id="screen-app">
+  <span class="sear" style="position:fixed;top:0;left:0;right:0;z-index:100"></span>
+
+  <!-- TOP NAV -->
+  <div class="topnav">
+    <div><div class="tb-top">HOSPITALITY</div><div class="tb-bot">BOSS</div></div>
+    <div class="nav-div"></div>
+    <div class="nav-iq">Culinary <span>IQ&#8482;</span></div>
+    <div class="search-wrap"><input class="topnav-search" placeholder="Search metrics, vendors, events&#8230;"/></div>
+    <div class="nav-right">
+      <div class="cash-badge" onclick="switchView('forward')">
+        <div class="cb-pulse"></div>
+        <div><div class="cb-label">Cash on Hand</div><div class="cb-value">$35,743</div></div>
+      </div>
+      <div class="alert-bell" onclick="toggleAlerts()">&#128276;<div class="alert-dot"></div></div>
+      <div class="user-pill">
+        <div class="user-avatar" id="u-av">RW</div>
+        <div><div class="user-name" id="u-name">Robert Wood</div><div class="user-role" id="u-role">Executive</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- RAIL -->
+    <div class="rail">
+      <div class="rail-logo-band"><div class="rlb-top">Culinary IQ&#8482;</div><div class="rlb-iq">INTELLIGENCE</div></div>
+      <div class="rail-section-label">Dashboards</div>
+      <div class="rail-item active" id="rail-executive" onclick="switchView('executive')""><span class="rail-icon">&#127962;</span>Owner</div>
+      <div class="rail-item" id="rail-culinary" onclick="switchView('culinary')"><span class="rail-icon">&#127859;</span>Culinary Ops</div>
+      <div class="rail-item" id="rail-foh" onclick="switchView('foh')"><span class="rail-icon">&#127863;</span>Front of House</div>
+      <div class="rail-item" id="rail-finance" onclick="switchView('finance')"><span class="rail-icon">&#128202;</span>Finance</div>
+      <div class="rail-div"></div>
+      <div class="rail-section-label">Intelligence</div>
+      <div class="rail-item" id="rail-forward" onclick="switchView('forward')"><span class="rail-icon">&#127919;</span>Forward Intel</div>
+      <div class="rail-item" id="rail-reports" onclick="switchView('reports')"><span class="rail-icon">&#128196;</span>Report Suite</div>
+      <div class="rail-div"></div>
+      <div class="rail-section-label">Status</div>
+      <div class="rail-alert tomato"><div class="ral">&#128680; Cash</div>$35,743 on hand · payroll drafting · $35,743 floor</div>
+      <div class="rail-alert tomato"><div class="ral">&#128680; Rent</div>SD $13.4K · DC $6.5K arrears</div>
+      <div class="rail-alert tomato"><div class="ral">&#128680; Vendors</div>Deliveries on hold · call today</div>
+      <div class="rail-alert saffron"><div class="ral">&#9888; Jul 15</div>Clark Construction $49K — confirm now</div>
+      <div class="rail-alert saffron"><div class="ral">&#9888; Jul 31</div>SuperFd National $55K — verify</div>
+      <div class="rail-alert celery"><div class="ral">&#10003; AR</div>$456K receivables · $241K top-5 target</div>
+      <div class="rail-div"></div>
+      <div class="rail-section-label">Tools</div>
+      <div class="rail-item" onclick="window.open('culinary-iq.html')"><span class="rail-icon">&#127859;</span>Culinary IQ&#8482;</div>
+      <div class="rail-item" onclick="window.open('ops-converter.html')"><span class="rail-icon">&#128203;</span>Ops Builder</div>
+      <div class="rail-item" onclick="window.open('menu-builder.html')"><span class="rail-icon">&#127869;</span>Menu Builder</div>
+      <div class="rail-item" onclick="window.open('pre-event-pl.html')"><span class="rail-icon">&#128202;</span>Pre-Event P&amp;L</div>
+      <div class="rail-item" onclick="window.open('event-calendar.html')"><span class="rail-icon">&#128197;</span>Event Calendar</div>
+      <div class="rail-item" onclick="window.open('hospitality-boss-benchmarks.html')"><span class="rail-icon">&#128208;</span>Benchmarks</div>
+      <div class="rail-bottom"><div class="rail-bottom-btn" onclick="showScreen('screen-login')">&#8617; Sign Out</div></div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+<!-- ═══ EXECUTIVE VIEW ═══ -->
+<div class="view active" id="view-executive">
+  <div class="view-header">
+    <div><div class="view-title">OWNER <em>OVERVIEW</em></div><div class="view-sub">Wood Cooks Holdings · All Entities · June 16, 2026 · Real Data</div></div>
+    <div class="ctrl-row"><div class="ctrl on">YTD 2026</div><div class="ctrl">June</div><div class="ctrl">July</div></div>
+  </div>
+
+  <!-- CRITICAL CASH POSITION BANNER -->
+  <div style="background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);border-radius:3px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:10px;height:10px;background:var(--tomato);border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0"></div>
+      <div>
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tomato);margin-bottom:3px">CRITICAL — $35,743 Cash Floor · $456K AR Must Collect</div>
+        <div style="font-size:12px;color:var(--ink-primary)">Total cash on hand: <strong style="color:var(--celery)">$35,743</strong> · Payroll drafting · Cash floor $35,743 · $456,139 AR = lifeline · Top 3 collections = $121K · Call Anthem + Kings NOW</div>
+      </div>
+    </div>
+    <button onclick="switchView('forward')" style="padding:8px 18px;background:var(--copper);color:var(--forge-deep);font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;border:none;border-radius:2px;cursor:pointer;flex-shrink:0">VIEW SURVIVAL MAP →</button>
+  </div>
+
+  <div class="g6" style="margin-bottom:12px">
+    <div class="kpi copper"><div class="kpi-label">YTD Revenue</div><div class="kpi-value">$2.86M</div><div class="kpi-sub">All entities</div><div class="kpi-delta up">▲ +36.5% Q1→Q2</div></div>
+    <div class="kpi tomato"><div class="kpi-label">Cash on Hand</div><div class="kpi-value">$35.7K</div><div class="kpi-sub">3 accounts total</div><div class="kpi-delta dn">🚨 Below payroll need</div></div>
+    <div class="kpi celery"><div class="kpi-label">June Revenue</div><div class="kpi-value">$393K</div><div class="kpi-sub">Caterease confirmed</div><div class="kpi-delta up">▲ Strong month</div></div>
+    <div class="kpi saffron"><div class="kpi-label">July Revenue</div><div class="kpi-value">$270K</div><div class="kpi-sub">Thin — $45.7K ARLS</div><div class="kpi-delta wr">⚠ Watch month</div></div>
+    <div class="kpi tomato"><div class="kpi-label">Rent Arrears</div><div class="kpi-value">$19.9K</div><div class="kpi-sub">DC $6.5K · SD $13.4K</div><div class="kpi-delta dn">Must clear by Jun 28</div></div>
+    <div class="kpi celery"><div class="kpi-label">A&J Prime Cost</div><div class="kpi-value">45.0%</div><div class="kpi-sub">Target: 58–65%</div><div class="kpi-delta up">✓ Best in portfolio</div></div>
+  </div>
+
+  <div class="g6040">
+    <div class="card">
+      <div class="card-title">Monthly Revenue — All Entities <span class="flag flag-copper">YTD + Forecast</span></div>
+      <div class="month-bars" id="exec-chart"></div>
+      <div style="display:flex;gap:16px;margin-top:6px">
+        <span style="font-size:9px;color:var(--ink-dim)">Q1: <span style="color:var(--ink-secondary)">$1.25M</span></span>
+        <span style="font-size:9px;color:var(--ink-dim)">Q2: <span style="color:var(--ink-secondary)">$1.71M</span></span>
+        <span style="font-size:9px;color:var(--celery)">+36.5% growth</span>
+        <span style="font-size:9px;color:var(--ink-dim)">Jun est: <span style="color:var(--copper-light)">$393K</span></span>
+        <span style="font-size:9px;color:var(--ink-dim)">Jul forecast: <span style="color:var(--saffron)">$270K</span></span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Mix — June 2026</div>
+      <div class="br"><div class="br-label">SECA-SD (Eco Caters)<small>deck655 + EPIC — Best month</small></div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--celery)"></div></div><div class="br-val c-celery">$109.6K</div></div>
+      <div class="br"><div class="br-label">A&J / Eco DC<small>19 events + IMP recurring</small></div><div class="br-track"><div class="br-fill" style="width:82%;background:var(--copper)"></div></div><div class="br-val c-copper">$90K</div></div>
+      <div class="br"><div class="br-label">ARLS / Anthem<small>Catering + concessions</small></div><div class="br-track"><div class="br-fill" style="width:81.7%;background:#3a5f8a"></div></div><div class="br-val">$89.6K</div></div>
+      <div class="br"><div class="br-label">SECA-LA<small>Kings + Territory + teams</small></div><div class="br-track"><div class="br-fill" style="width:62%;background:var(--beet)"></div></div><div class="br-val">$68K</div></div>
+      <div class="br"><div class="br-label">SuperFd DC<small>Territory Foods + visiting teams</small></div><div class="br-track"><div class="br-fill" style="width:32.8%;background:var(--saffron)"></div></div><div class="br-val">$36K</div></div>
+    </div>
+  </div>
+
+  <!-- ENTITY STATUS -->
+  <div class="card-title" style="font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--stainless-dim);margin-bottom:10px">Entity Status — June 2026 vs Breakeven</div>
+  <div class="g5" style="margin-bottom:12px">
+    <div class="entity-card above">
+      <div class="ec-name">SECA-SD</div><div class="ec-market">San Diego · Eco Caters</div>
+      <div class="ec-row"><span class="ec-key">June Rev</span><span class="ec-val c-celery">$109,643</span></div>
+      <div class="ec-row"><span class="ec-key">Breakeven</span><span class="ec-val">$56,594</span></div>
+      <div class="ec-row"><span class="ec-key">Prime Cost</span><span class="ec-val c-celery">~47%</span></div>
+      <div class="ec-gap" style="color:var(--celery)">+$53,049</div>
+      <div style="font-size:9px;color:var(--ink-dim)">⚠ July only $17.3K</div>
+    </div>
+    <div class="entity-card above">
+      <div class="ec-name">ARLS / Anthem</div><div class="ec-market">DC · Venue Catering</div>
+      <div class="ec-row"><span class="ec-key">June Rev</span><span class="ec-val c-celery">$89,599</span></div>
+      <div class="ec-row"><span class="ec-key">Breakeven</span><span class="ec-val">$36,394</span></div>
+      <div class="ec-row"><span class="ec-key">Structure</span><span class="ec-val">10% concession</span></div>
+      <div class="ec-gap" style="color:var(--celery)">+$53,205</div>
+      <div style="font-size:9px;color:var(--saffron)">⚠ July $45.7K — below BE</div>
+    </div>
+    <div class="entity-card watch">
+      <div class="ec-name">A&J / Eco DC</div><div class="ec-market">Washington DC · Full Service</div>
+      <div class="ec-row"><span class="ec-key">June Rev</span><span class="ec-val c-saffron">$90,000</span></div>
+      <div class="ec-row"><span class="ec-key">Breakeven</span><span class="ec-val">$72,250</span></div>
+      <div class="ec-row"><span class="ec-key">Prime Cost</span><span class="ec-val c-celery">45.0%</span></div>
+      <div class="ec-gap" style="color:var(--celery)">+$17,750</div>
+      <div style="font-size:9px;color:var(--celery)">✓ Above breakeven</div>
+    </div>
+    <div class="entity-card above">
+      <div class="ec-name">SECA-LA</div><div class="ec-market">Los Angeles · Kings + Eco Caters</div>
+      <div class="ec-row"><span class="ec-key">June Rev</span><span class="ec-val c-saffron">$68,045</span></div>
+      <div class="ec-row"><span class="ec-key">Breakeven</span><span class="ec-val">$79,509</span></div>
+      <div class="ec-row"><span class="ec-key">Structure</span><span class="ec-val">Cost-plus + fee</span></div>
+      <div class="ec-gap" style="color:var(--tomato)">-$11,464</div>
+      <div style="font-size:9px;color:var(--saffron)">⚠ Roza salary gap · Sept Eco target</div>
+    </div>
+    <div class="entity-card below">
+      <div class="ec-name">SuperFd National</div><div class="ec-market">DC · Corporate Overhead Entity</div>
+      <div class="ec-row"><span class="ec-key">June Rev</span><span class="ec-val c-saffron">$35,986</span></div>
+      <div class="ec-row"><span class="ec-key">Breakeven</span><span class="ec-val">$120,776</span></div>
+      <div class="ec-row"><span class="ec-key">Labor %</span><span class="ec-val c-tomato">65.3%</span></div>
+      <div class="ec-gap" style="color:var(--tomato)">-$84,790</div>
+      <div style="font-size:9px;color:var(--ink-dim)">Corp OH washes across 4 ops entities</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Culinary IQ™ Intelligence <span class="flag flag-copper">Financial Context</span></div>
+      <div class="insight tomato"><strong>Jun 29–Jul 5: $93,400 gap — single hardest week.</strong> $121,400 out vs $28K in. This is a math problem, not an operational one. Every dollar spent before July 6 that isn't essential makes this week worse. June surplus is the bridge.</div>
+      <div class="insight saffron"><strong>July is structurally thin — two entities below breakeven.</strong> ARLS at $45,750 vs $68,422 BE and SECA-SD at $17,305 vs $78,998 BE. Both are bridged by A&J DC ($94,226) and SuperFd DC ($73,000). July survives only if those two execute cleanly.</div>
+      <div class="insight saffron"><strong>Clark Construction and SuperFd National $55K are load-bearing.</strong> These two events — Jul 15 and Jul 31 — fund two payroll runs. If either delays collection by even one week, those payrolls are at risk. No other July events come close in size.</div>
+      <div class="insight celery"><strong>$456,139 in AR outstanding across 131 events.</strong> True blended breakeven is $365,523/month. The business is generating cash — it is sitting in unpaid invoices. Top 5 collections in 14 days = $241K. That plus $109K cash = $350K available. The path through August is AR discipline, not bridge capital alone.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Action Checklist — Sequenced by Date <span class="flag flag-tomato">This Week First</span></div>
+      <table class="et">
+        <thead><tr><th>By When</th><th>Action</th><th>Amount</th><th>Owner</th><th>Done</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--tomato);font-weight:500">Jun 12–13</td><td>✓ Jun 19 payroll funded — $35,743 on hand · ARLS $17.6K + MioLogic $5.2K received</td><td class="c-celery">DONE</td><td>Robert</td><td><span style="font-size:14px">☑</span></td></tr>
+          <tr><td style="color:var(--tomato);font-weight:500">Jun 13</td><td>Call top 3 vendors — give specific payment date + amount each</td><td>$3K each</td><td>Robert</td><td><span style="font-size:14px">☐</span></td></tr>
+          <tr><td style="color:var(--tomato)">Jun 18</td><td>Confirm Broocker $21,076 collected — largest SD receivable</td><td class="c-tomato">$21,076</td><td>Sales</td><td><span style="font-size:14px">☐</span></td></tr>
+          <tr><td style="color:var(--tomato)">Jun 19</td><td>Payroll runs — confirm funded before 9am</td><td class="c-tomato">$80,000</td><td>Robert</td><td><span style="font-size:14px">☐</span></td></tr>
+          <tr><td style="color:var(--saffron)">Jun 20</td><td>Confirm Clark Construction contract signed — get deposit</td><td class="c-saffron">$49,123</td><td>Sales</td><td><span style="font-size:14px">☐</span></td></tr>
+          <tr><td style="color:var(--saffron)">Jun 27</td><td>Pay DC rent balance</td><td class="c-saffron">$6,500</td><td>Robert</td><td><span style="font-size:14px">☐</span></td></tr>
+          <tr><td style="color:var(--saffron)">Jun 28</td><td>Pay SD landlord — full arrears</td><td class="c-saffron">$13,400</td><td>Robert</td><td><span style="font-size:14px">☐</span></td></tr>
+          <tr><td style="color:var(--ink-dim)">Jun 30</td><td>Confirm SuperFd National Jul 31 $55K event — what is it, who pays</td><td>$55,000</td><td>Sales</td><td><span style="font-size:14px">☐</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ FINANCE VIEW ═══ -->
+<div class="view" id="view-finance">
+  <div class="view-header">
+    <div><div class="view-title">REVENUE <em>& FINANCE</em></div><div class="view-sub">Invoice Intelligence · Vendor Analysis · Breakeven · June–July 2026 · Real Data</div></div>
+    <div class="ctrl-row"><div class="ctrl on">Current</div><div class="ctrl">YTD</div></div>
+  </div>
+  <div class="g4" style="margin-bottom:12px">
+    <div class="kpi tomato"><div class="kpi-label">Cash on Hand</div><div class="kpi-value">$35.7K</div><div class="kpi-sub">JMB $8.9K · M&T $26.8K · payroll drafting</div><div class="kpi-delta dn">🚨 Payroll not funded</div></div>
+    <div class="kpi tomato"><div class="kpi-label">Rent Arrears</div><div class="kpi-value">$19.9K</div><div class="kpi-sub">DC $6.5K · SD $13.4K</div><div class="kpi-delta dn">LA paid ✓</div></div>
+    <div class="kpi saffron"><div class="kpi-label">Monthly Rent</div><div class="kpi-value">$25.4K</div><div class="kpi-sub">DC $11.5K · LA $7.2K · SD $6.7K</div><div class="kpi-delta wr">Due by 5th each month</div></div>
+    <div class="kpi copper"><div class="kpi-label">Total Invoiced YTD</div><div class="kpi-value">$717K</div><div class="kpi-sub">497 invoices · MarginEdge</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Vendor Spend — Top 7 YTD</div>
+      <div class="br"><div class="br-label">Melissa's World Variety<small>Produce · SECA-LA</small></div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--celery)"></div></div><div class="br-val">$79,616</div></div>
+      <div class="br"><div class="br-label">West Coast Prime Meats<small>Protein · SECA-LA · +24% May</small></div><div class="br-track"><div class="br-fill" style="width:91.6%;background:var(--tomato)"></div></div><div class="br-val c-tomato">$72,905</div></div>
+      <div class="br"><div class="br-label">US Foods<small>Broadline · Multiple</small></div><div class="br-track"><div class="br-fill" style="width:87%;background:var(--copper)"></div></div><div class="br-val">$69,245</div></div>
+      <div class="br"><div class="br-label">Baldor Specialty Foods<small>Specialty · Multiple</small></div><div class="br-track"><div class="br-fill" style="width:85%;background:#3a5f8a"></div></div><div class="br-val">$67,675</div></div>
+      <div class="br"><div class="br-label">RLF-Laurel Select Event<small>Rentals · A&J</small></div><div class="br-track"><div class="br-fill" style="width:74%;background:var(--saffron)"></div></div><div class="br-val c-saffron">$59,197</div></div>
+      <div class="br"><div class="br-label">Marx Realty<small>Rent · Multiple · Fixed</small></div><div class="br-track"><div class="br-fill" style="width:59%;background:var(--stainless-dim)"></div></div><div class="br-val">$47,000</div></div>
+      <div class="br"><div class="br-label">Instawork<small>Event Labor · SECA-SD</small></div><div class="br-track"><div class="br-fill" style="width:54.6%;background:var(--saffron)"></div></div><div class="br-val c-saffron">$43,461</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Breakeven by Entity — Monthly <span class="flag flag-copper">Actuals</span></div>
+      <table class="et">
+        <thead><tr><th>Entity</th><th>Monthly Rev</th><th>Breakeven</th><th>Gap</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>ARLS / Anthem</td><td>$89,599</td><td>$68,422</td><td class="c-celery">+$21,177</td><td class="c-celery">✓ Above</td></tr>
+          <tr><td>SECA-SD</td><td>$109,643</td><td>$78,998</td><td class="c-celery">+$30,645</td><td class="c-celery">✓ Above</td></tr>
+          <tr><td>A&J / Eco DC</td><td>$90,000</td><td>$93,567</td><td class="c-saffron">-$3,567</td><td class="c-saffron">⚠ Close</td></tr>
+          <tr><td>SuperFd DC</td><td>$35,986</td><td>$11,976</td><td class="c-celery">+$24,010</td><td class="c-celery">✓ Above</td></tr>
+          <tr><td>SECA-LA</td><td>$68,045</td><td>$79,509</td><td class="c-tomato">-$11,464</td><td class="c-tomato">⚠ Below</td></tr>
+          <tr><td><strong>Total Blended</strong></td><td>$393,273</td><td>$365,523</td><td class="c-celery">+$115,528</td><td class="c-celery">✓ Above</td></tr>
+        </tbody>
+      </table>
+      <div class="insight saffron" style="margin-top:10px"><strong>$27,750 blended surplus in June</strong> — much tighter than previously shown. With blended breakeven at $365,523, the portfolio is only $27,750 above water this month. That surplus is already committed to arrears clearance and the Jun 29–Jul 5 gap. Bridge capital is not optional.</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">Accounts Receivable — $456,139 Outstanding <span class="flag flag-celery">✓ Collections = Survival</span></div>
+    <div class="insight celery" style="margin-bottom:10px"><strong>$456K in AR changes the picture entirely.</strong> No critical weeks exist if top collections land in the next 14 days. ARLS Concessions $56.9K + Kings May $31.6K + IonOpticks $33.4K alone = $121K. The business is generating cash — it is sitting in 131 unpaid invoices across 7 entities.</div>
+    <table class="et">
+      <thead><tr><th>#</th><th>Entity / Client</th><th>Amount</th><th>Status</th><th>Action Required</th></tr></thead>
+      <tbody>
+        <tr><td class="c-copper" style="font-weight:600">1</td><td>ARLS Concessions — 10 Jun shows</td><td class="c-copper">$56,888</td><td class="c-celery">Ready to collect</td><td>Invoice The Anthem today</td></tr>
+        <tr><td class="c-copper" style="font-weight:600">2</td><td>SuperFd LA — Kings May 31 (2 invoices)</td><td class="c-copper">$31,599</td><td class="c-tomato">Overdue 2+ weeks</td><td>Call Kings billing NOW</td></tr>
+        <tr><td class="c-copper" style="font-weight:600">3</td><td>EcoCaters DC — ADC (2 events)</td><td class="c-copper">$34,217</td><td class="c-saffron">Pending approval</td><td>Escalate — request partial</td></tr>
+        <tr><td class="c-copper" style="font-weight:600">4</td><td>EcoCaters DC — JLL Jun 23</td><td class="c-copper">$25,733</td><td class="c-saffron">Pending approval</td><td>Scott Goss — follow up</td></tr>
+        <tr><td class="c-copper" style="font-weight:600">5</td><td>EcoCaters deck655 — IonOpticks Jun 4</td><td class="c-copper">$33,444</td><td class="c-saffron">Open since Jun 4</td><td>Contact Annie Ward</td></tr>
+        <tr><td class="c-copper" style="font-weight:600">6</td><td>SD EPIC — Crooks, Oglesby, Briant, Green</td><td class="c-copper">$25,722</td><td class="c-celery">Approved</td><td>Confirm ETA with Megan Sheehan</td></tr>
+        <tr><td class="c-dim">7–9</td><td>ARLS Catering backlog + Kings ongoing + Territory Foods</td><td class="c-copper">$248,536</td><td class="c-dim">Various</td><td>Systematic invoicing — assign to Carla</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Finance Intelligence — Priority Actions</div>
+    <div class="insight tomato"><strong>Jun 29–Jul 5 remains a high-outflow week</strong> but is no longer critical if AR collections land first. $121,400 goes out. With $45K in projected cash in PLUS AR collections from ARLS concessions and Kings, balance stays above $80K through that week.</div>
+    <div class="insight tomato"><strong>Clark Construction $49,123 on Jul 15 is load-bearing.</strong> If this event closes and collects on time, Jul 13–19 survives payroll. If it delays by even one week, balance hits near zero. Confirm signed contract this week.</div>
+    <div class="insight saffron"><strong>SuperFd National $55K on Jul 31 must collect.</strong> This is the Jul 31 payroll fund. If this event collects late or partially, July 31 payroll is at risk. Verify what this event is, who the client is, and when they pay.</div>
+    <div class="insight copper"><strong>Bridge capital of $175K–$300K needed.</strong> The gap is structural from July onward. Revenue covers operations but not simultaneously: arrears catch-up + full rent cycle + payroll + vendor restoration. Bridge capital is the only clean solution.</div>
+  </div>
+</div>
+
+<!-- ═══ CULINARY VIEW ═══ -->
+<div class="view" id="view-culinary">
+  <div class="view-header">
+    <div><div class="view-title">CHEF <em>OPERATIONS</em></div><div class="view-sub">Menu Engineering · Food Cost · Pricing · Cross-Utilization · Recipe Intelligence</div></div>
+    <div class="ctrl-row"><div class="ctrl on">All Menus</div><div class="ctrl">Eco Caters</div><div class="ctrl">SuperFd</div></div>
+  </div>
+  <div style="background:var(--surface-card);border:1px solid rgba(184,115,51,.3);border-radius:3px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font-size:24px">🍳</span>
+      <div>
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);margin-bottom:3px">Culinary IQ™ Tool</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ink-primary)">BEO Converter + Week Planner</div>
+        <div style="font-size:10px;color:var(--ink-dim);margin-top:2px">Paste a Caterease BEO → production sheet, prep weights, ingredient order guide, week plan</div>
+      </div>
+    </div>
+    <a href="culinary-iq.html" target="_blank" style="padding:10px 20px;background:linear-gradient(135deg,var(--copper-dark),var(--copper));color:white;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;border-radius:2px;text-decoration:none;flex-shrink:0;white-space:nowrap">OPEN CULINARY IQ →</a>
+  </div>
+  <div style="background:var(--surface-card);border:1px solid rgba(184,115,51,.3);border-radius:3px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font-size:22px">&#127869;</span>
+      <div>
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);margin-bottom:2px">Sales Tool</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ink-primary)">Menu Builder</div>
+        <div style="font-size:10px;color:var(--ink-dim);margin-top:2px">9 cuisine themes &middot; 6 service formats &middot; Dietary filters &middot; Print-ready menu cards</div>
+      </div>
+    </div>
+    <a href="menu-builder.html" target="_blank" style="padding:10px 20px;background:linear-gradient(135deg,var(--copper-dark),var(--copper));color:white;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;border-radius:2px;text-decoration:none;flex-shrink:0;white-space:nowrap">OPEN MENU BUILDER →</a>
+  </div>
+  <div style="background:var(--surface-card);border:1px solid rgba(184,115,51,.3);border-radius:3px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font-size:22px">&#128202;</span>
+      <div>
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);margin-bottom:2px">Sales Tool · Pre-Event</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ink-primary)">Pre-Event P&amp;L</div>
+        <div style="font-size:10px;color:var(--ink-dim);margin-top:2px">Build true cost across 7 layers &middot; Suggested price at target margin &middot; Deposit &amp; cash flow</div>
+      </div>
+    </div>
+    <a href="pre-event-pl.html" target="_blank" style="padding:10px 20px;background:linear-gradient(135deg,var(--copper-dark),var(--copper));color:white;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;border-radius:2px;text-decoration:none;flex-shrink:0;white-space:nowrap">OPEN PRE-EVENT P&amp;L →</a>
+  </div>
+  <div class="g5" style="margin-bottom:12px">
+    <div class="kpi copper"><div class="kpi-label">Recipe Database</div><div class="kpi-value">4,180</div><div class="kpi-sub">Active · Galley Solutions</div></div>
+    <div class="kpi celery"><div class="kpi-label">Eco Caters FC%</div><div class="kpi-value">23.2%</div><div class="kpi-sub">Target: 24% · A&J entity</div><div class="kpi-delta up">✓ Under target</div></div>
+    <div class="kpi saffron"><div class="kpi-label">ARLS Food Cost</div><div class="kpi-value">28.0%</div><div class="kpi-sub">Target: 24%</div><div class="kpi-delta wr">⚠ 4pts over</div></div>
+    <div class="kpi tomato"><div class="kpi-label">Pricing Alert</div><div class="kpi-value">3 Cols</div><div class="kpi-sub">SuperFd add-on discrepancy</div><div class="kpi-delta wr">⚠ Resolve before beta</div></div>
+    <div class="kpi celery"><div class="kpi-label">Cross-Util Score</div><div class="kpi-value">74%</div><div class="kpi-sub">Ingredients shared 3+ recipes</div><div class="kpi-delta up">✓ Strong</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Eco Caters — Package Pricing (Target) <span class="flag flag-copper">Anchor/Target/Floor</span></div>
+      <table class="et">
+        <thead><tr><th>Service</th><th>Anchor</th><th>Target</th><th>Floor</th><th>FC%</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td>Dinner Buffet 1</td><td>$36</td><td>$33</td><td>$30</td><td class="c-celery">~24%</td><td class="c-celery">✓ Star</td></tr>
+          <tr><td>Dinner Buffet 2</td><td>$39</td><td>$36</td><td>$33</td><td class="c-celery">~23%</td><td class="c-celery">✓ Star</td></tr>
+          <tr><td>Dinner Buffet 3</td><td>$44</td><td>$41</td><td>$38</td><td class="c-celery">~22%</td><td class="c-celery">✓ Star</td></tr>
+          <tr><td>Family Style 2</td><td>$49</td><td>$46</td><td>$43</td><td class="c-celery">~22%</td><td class="c-copper">◆ Puzzle</td></tr>
+          <tr><td>Cocktail Party 2hr</td><td>$55</td><td>$49</td><td>$46</td><td class="c-celery">~18%</td><td class="c-celery">✓ Star</td></tr>
+          <tr><td>High End Plated</td><td>$105</td><td>$95</td><td>$90</td><td class="c-celery">~22%</td><td class="c-beet" style="color:#c060a0">♦ Premium</td></tr>
+          <tr><td>Bar Program 3hr Std</td><td>$31</td><td>$30</td><td>$28</td><td>~22%</td><td class="c-beet" style="color:#c060a0">♦ Beet</td></tr>
+          <tr><td>Service Charge Rate</td><td>20%</td><td>20%</td><td>12%</td><td>—</td><td class="c-saffron">⚠ Review rate</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">SuperFd CPM Pricing <span class="flag flag-tomato">⚠ Discrepancy — Resolve</span></div>
+      <table class="et">
+        <thead><tr><th>Tier</th><th>Proteins</th><th>Std</th><th>XL</th><th>FC%</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--celery)">CPM1</td><td>Chicken, Veg, Ground Beef, Turkey, Pork</td><td>$21.50</td><td>$26.50</td><td class="c-celery">23–28%</td><td class="c-celery">✓ Strong</td></tr>
+          <tr><td style="color:var(--saffron)">CPM2</td><td>Whole Muscle, Shrimp, Cod, Flounder</td><td>$25.50</td><td>$31.50</td><td class="c-saffron">27–33%</td><td class="c-saffron">⚠ Watch</td></tr>
+          <tr><td style="color:var(--tomato)">CPM3</td><td>Salmon, Ribeye, NY Strip, Flat Iron</td><td>$35.50</td><td>$41.50</td><td class="c-tomato">28–36%</td><td class="c-tomato">⚠ Flag</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;padding:10px 12px;background:rgba(192,57,43,.07);border-left:3px solid var(--tomato);border-radius:0 2px 2px 0;font-size:10px;color:var(--stainless-dim);line-height:1.6">
+        <strong style="color:var(--tomato)">Discrepancy:</strong> Airport delivery: $125 / $106 / $75 (3 columns). Drop-off: $150 / $128 / $75. Resolve before any beta user sees pricing or billing errors will occur.
+      </div>
+      <div style="margin-top:10px">
+        <div class="br"><div class="br-label">Eggs (19 recipes)</div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--copper)"></div></div><div class="br-val">⚠ Price risk</div></div>
+        <div class="br"><div class="br-label">Garlic (14 recipes)</div><div class="br-track"><div class="br-fill" style="width:73.7%;background:var(--copper)"></div></div><div class="br-val">Primary base</div></div>
+        <div class="br"><div class="br-label">Onions (12 recipes)</div><div class="br-track"><div class="br-fill" style="width:63%;background:var(--celery)"></div></div><div class="br-val">Stable</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOH VIEW ═══ -->
+<div class="view" id="view-foh">
+  <div class="view-header">
+    <div><div class="view-title">OPERATIONS <em>INTELLIGENCE</em></div><div class="view-sub">Service Labor · Event Staffing · Instawork vs Direct · Service Charge · Bar — Q2 2026</div></div>
+    <div class="ctrl-row"><div class="ctrl on">All Events</div><div class="ctrl">A&J</div><div class="ctrl">SECA-SD</div></div>
+  </div>
+  <div style="background:var(--surface-card);border:1px solid rgba(184,115,51,.3);border-radius:3px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+    <div style="display:flex;align-items:center;gap:14px">
+      <span style="font-size:22px">&#128203;</span>
+      <div>
+        <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-dark);margin-bottom:2px">Culinary IQ&#8482; Tool</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ink-primary)">Event Operations Builder</div>
+        <div style="font-size:10px;color:var(--ink-dim);margin-top:2px">BEO &#8594; Timeline &middot; Staffing Plan &middot; Equipment Pull &middot; Pack List &middot; RLF-Laurel Rental Order</div>
+      </div>
+    </div>
+    <a href="ops-converter.html" target="_blank" style="padding:10px 20px;background:linear-gradient(135deg,var(--copper-dark),var(--copper));color:white;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;border-radius:2px;text-decoration:none;flex-shrink:0;white-space:nowrap">OPEN OPS BUILDER &#8594;</a>
+  </div>
+  <div class="g5" style="margin-bottom:12px">
+    <div class="kpi tomato"><div class="kpi-label">Instawork YTD</div><div class="kpi-value">$43.5K</div><div class="kpi-sub">SECA-SD event labor</div><div class="kpi-delta wr">25–30% platform fee</div></div>
+    <div class="kpi saffron"><div class="kpi-label">SECA-SD Labor %</div><div class="kpi-value">29%</div><div class="kpi-sub">Target: 25%</div><div class="kpi-delta wr">⚠ 4pts over — Instawork</div></div>
+    <div class="kpi celery"><div class="kpi-label">A&J Labor %</div><div class="kpi-value">22.0%</div><div class="kpi-sub">Target: 22%</div><div class="kpi-delta up">✓ On target</div></div>
+    <div class="kpi copper"><div class="kpi-label">Svc Chg Q2</div><div class="kpi-value">$52.8K</div><div class="kpi-sub">Surplus +$4,620</div><div class="kpi-delta up">✓ Overhead covered</div></div>
+    <div class="kpi beet"><div class="kpi-label">Bar Revenue Q2</div><div class="kpi-value">$84.3K</div><div class="kpi-sub">+18.4% vs Q1</div><div class="kpi-delta up">✓ Strong</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Event Service Labor — Q2 2026 <span class="flag flag-tomato">⚠ Instawork premium costing $18–25K/yr extra</span></div>
+      <table class="et" style="margin-bottom:12px">
+        <thead><tr><th>Entity</th><th>Labor Source</th><th>Q2 Labor $</th><th>Labor %</th><th>Target %</th><th>vs Target</th></tr></thead>
+        <tbody>
+          <tr><td>A&J / Eco DC</td><td>Direct hire</td><td>$61,475</td><td class="c-celery">23.2%</td><td>22%</td><td class="c-celery">+1.2pts ✓</td></tr>
+          <tr><td>SECA-SD</td><td>Instawork heavy</td><td>$38,740</td><td class="c-tomato">29.0%</td><td>25%</td><td class="c-tomato">+4pts ⚠</td></tr>
+          <tr><td>ARLS / Anthem</td><td>Direct hire</td><td>$45,310</td><td class="c-celery">31.0%</td><td>32%</td><td class="c-celery">-1pt ✓</td></tr>
+          <tr><td>SECA-LA</td><td>Direct hire</td><td>$33,800</td><td class="c-saffron">36.0%</td><td>32%</td><td class="c-saffron">+4pts ⚠</td></tr>
+          <tr><td>SuperFd DC</td><td>Direct hire</td><td>$43,761</td><td class="c-tomato">65.3%</td><td>40%</td><td class="c-tomato">+25pts 🚨</td></tr>
+        </tbody>
+      </table>
+      <div class="insight tomato"><strong>Instawork SECA-SD — $87K annualized at 25–30% platform premium.</strong> Building a core roster of 8–12 reliable direct-hire event staff and using Instawork as overflow only could save $18–25K annually. That's more than the SD rent arrears every year.</div>
+      <div class="insight saffron" style="margin-top:8px"><strong>SECA-LA labor 36% — above 32% target.</strong> Roza's salary is the fixed driver. LA needs consistent Eco Caters corporate business by September to absorb that fixed cost into a healthier labor percentage.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cost Per Cover — Event Labor <span class="flag flag-copper">Q2 Avg</span></div>
+      <div style="margin-bottom:12px">
+        <div class="br"><div class="br-label">A&J Full Service<small>$18/hr servers · direct hire</small></div><div class="br-track"><div class="br-fill" style="width:72%;background:var(--celery)"></div></div><div class="br-val c-celery">$14.20/cv</div></div>
+        <div class="br"><div class="br-label">A&J Drop-Off<small>Driver + minimal labor</small></div><div class="br-track"><div class="br-fill" style="width:28%;background:var(--celery)"></div></div><div class="br-val c-celery">$5.50/cv</div></div>
+        <div class="br"><div class="br-label">SECA-SD Full Service<small>Instawork premium baked in</small></div><div class="br-track"><div class="br-fill" style="width:88%;background:var(--saffron)"></div></div><div class="br-val c-saffron">$17.40/cv</div></div>
+        <div class="br"><div class="br-label">ARLS / Anthem<small>Venue staff + kitchen</small></div><div class="br-track"><div class="br-fill" style="width:64%;background:var(--copper)"></div></div><div class="br-val">$12.60/cv</div></div>
+        <div class="br"><div class="br-label">SuperFd CPM<small>Individual pack labor</small></div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--tomato)"></div></div><div class="br-val c-tomato">$19.80/cv</div></div>
+      </div>
+      <div style="height:1px;background:rgba(184,115,51,.25);margin:10px 0"></div>
+      <div class="card-title" style="margin-bottom:8px">Service Charge — Policy & Q2 Performance</div>
+      <div class="insight spinach" style="margin-bottom:8px"><strong>Policy (hardcoded):</strong> Service charge = employer overhead recovery only. Never to hourly staff. Gratuity goes entirely to service employees. Q2 surplus: +$4,620.</div>
+      <div class="br"><div class="br-label">Svc Charge Collected Q2</div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--copper)"></div></div><div class="br-val c-copper">$52,840</div></div>
+      <div class="br"><div class="br-label">Overhead Applied</div><div class="br-track"><div class="br-fill" style="width:91.3%;background:#3a5f8a"></div></div><div class="br-val">$48,220</div></div>
+      <div class="br"><div class="br-label">Gratuity (to staff)</div><div class="br-track"><div class="br-fill" style="width:17.4%;background:var(--spinach)"></div></div><div class="br-val">$9,220</div></div>
+      <div style="height:1px;background:rgba(184,115,51,.25);margin:10px 0"></div>
+      <div class="card-title" style="margin-bottom:8px">Bar Revenue Q2 — Secondary KPI</div>
+      <div class="br"><div class="br-label">Spirits (18.2% pour cost ✓)</div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--celery)"></div></div><div class="br-val">$38,400</div></div>
+      <div class="br"><div class="br-label">Wine (28.4% ⚠ over target)</div><div class="br-track"><div class="br-fill" style="width:67%;background:var(--tomato)"></div></div><div class="br-val c-tomato">$25,760</div></div>
+      <div class="br"><div class="br-label">Beer / NA (on target ✓)</div><div class="br-track"><div class="br-fill" style="width:52%;background:var(--celery)"></div></div><div class="br-val">$20,160</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REPORTS VIEW ═══ -->
+<div class="view" id="view-reports">
+  <div class="view-header">
+    <div><div class="view-title">CULINARY IQ&#8482; <em>REPORT SUITE</em></div><div class="view-sub">Print · Export · Share · All reports powered by your real operational data</div></div>
+  </div>
+  <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;display:flex;align-items:center;gap:8px">Weekly Reports<span style="flex:1;height:1px;background:rgba(184,115,51,.25)"></span></div>
+  <div class="g3" style="margin-bottom:16px">
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">📊</div><div class="rc-title">Monday Morning Packet</div><div class="rc-desc">This week's events, last week's prime cost, top 3 alerts, cash position, one action item.</div><div class="rc-freq">Every Monday · All Entities</div></a>
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">📈</div><div class="rc-title">Weekly Prime Cost Report</div><div class="rc-desc">Food cost % and labor % vs. target by entity. 4-week trend. Variance flags.</div><div class="rc-freq">Weekly · Culinary Ops + Executive</div></a>
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">📋</div><div class="rc-title">Food Cost Variance</div><div class="rc-desc">Theoretical vs. actual food cost. Galley vs. MarginEdge. Flags largest variances.</div><div class="rc-freq">Weekly · Chef + Purchasing</div></a>
+  </div>
+  <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;display:flex;align-items:center;gap:8px">Event Reports<span style="flex:1;height:1px;background:rgba(184,115,51,.25)"></span></div>
+  <div class="g3" style="margin-bottom:16px">
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">🎯</div><div class="rc-title">Post-Event P&L</div><div class="rc-desc">True event profit after all 7 cost layers. Actual vs. budgeted. Labor detail, OT flags.</div><div class="rc-freq">Per Event · DOO + Finance</div></a>
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">📄</div><div class="rc-title">Pre-Event Cost Sheet</div><div class="rc-desc">Recipe costs, labor schedule, rental items, delivery logistics for upcoming events.</div><div class="rc-freq">Per Event · Chef + FOH</div></a>
+    <a class="report-card" href="hb-survival-cashflow.pdf" target="_blank"><div class="rc-icon">🗺️</div><div class="rc-title">Survival Cash Flow Map</div><div class="rc-desc">Week-by-week cash flow June–August 2026. Real data, real gaps, bridge funding needs.</div><div class="rc-freq">Daily Reference · Executive Only</div></a>
+  </div>
+  <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;display:flex;align-items:center;gap:8px">Monthly Reports<span style="flex:1;height:1px;background:rgba(184,115,51,.25)"></span></div>
+  <div class="g3">
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">📉</div><div class="rc-title">Monthly Entity P&L</div><div class="rc-desc">Full P&L for each entity. Revenue, food, labor, overhead, margin. MoM comparison.</div><div class="rc-freq">Monthly · Executive + Finance</div></a>
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">🛒</div><div class="rc-title">Vendor Spend Analysis</div><div class="rc-desc">Spend by vendor, entity. MoM comparison. Price movement flags. MarginEdge data.</div><div class="rc-freq">Monthly · Finance + Culinary</div></a>
+    <a class="report-card" href="hospitality-boss-reports.html" target="_blank"><div class="rc-icon">💰</div><div class="rc-title">Service Charge Coverage</div><div class="rc-desc">Service charge collected vs. overhead allocated. Surplus/deficit by entity.</div><div class="rc-freq">Monthly · Ownership + DOO</div></a>
+  </div>
+</div>
+
+
+<!-- ═══ FORWARD INTELLIGENCE VIEW ═══ -->
+<div class="view" id="view-forward">
+  <div class="view-header">
+    <div><div class="view-title">FORWARD <em>INTELLIGENCE</em></div><div class="view-sub">Pipeline · 90-Day Runway · 13-Week Cash Flow · Definite & Tentative · Real Data</div></div>
+    <div class="ctrl-row"><div class="ctrl on">All Entities</div><div class="ctrl">Definite Only</div></div>
+  </div>
+
+  <!-- SURVIVAL BANNER -->
+  <div style="background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.25);border-radius:3px;padding:12px 16px;margin-bottom:14px">
+    <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--tomato);margin-bottom:6px">SURVIVAL MODE — Cash Position Critical</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div><div style="font-size:9px;color:var(--ink-dim)">Cash on Hand</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--tomato)">$35,743</div></div>
+      <div><div style="font-size:9px;color:var(--ink-dim)">Next Payroll</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--tomato)">Jun 19</div><div style="font-size:9px;color:var(--ink-dim)">$80,000 needed</div></div>
+      <div><div style="font-size:9px;color:var(--ink-dim)">Rent Arrears</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--tomato)">$19,900</div><div style="font-size:9px;color:var(--ink-dim)">DC $6.5K · SD $13.4K</div></div>
+      <div><div style="font-size:9px;color:var(--ink-dim)">Bridge Capital Needed</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--saffron)">$175–300K</div><div style="font-size:9px;color:var(--ink-dim)">Minimum $175K for critical gaps</div></div>
+    </div>
+  </div>
+
+  <!-- 90-DAY RUNWAY -->
+  <div class="g3 mb12">
+    <div class="card" style="border-color:rgba(143,200,122,.2)">
+      <div class="card-title">June 2026 — Current Month <span class="flag flag-celery">✓ On Track</span></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--celery);letter-spacing:1px;margin-bottom:8px">$393,273</div>
+      <div class="br"><div class="br-label">ARLS / Anthem</div><div class="br-track"><div class="br-fill" style="width:81.7%;background:#3a5f8a"></div></div><div class="br-val">$89,599</div></div>
+      <div class="br"><div class="br-label">SECA-SD (Eco)</div><div class="br-track"><div class="br-fill" style="width:100%;background:var(--celery)"></div></div><div class="br-val c-celery">$109,643</div></div>
+      <div class="br"><div class="br-label">A&J / Eco DC</div><div class="br-track"><div class="br-fill" style="width:82%;background:var(--copper)"></div></div><div class="br-val">$90,000</div></div>
+      <div class="br"><div class="br-label">SuperFd DC</div><div class="br-track"><div class="br-fill" style="width:32.8%;background:var(--saffron)"></div></div><div class="br-val">$35,986</div></div>
+      <div class="br"><div class="br-label">SECA-LA</div><div class="br-track"><div class="br-fill" style="width:62%;background:var(--beet)"></div></div><div class="br-val">$68,045</div></div>
+      <div style="height:1px;background:rgba(184,115,51,.25);margin:10px 0"></div>
+      <div style="font-size:10px;color:var(--ink-dim)">Breakeven: <span style="color:var(--celery)">$365,523 · Covered 1.4x ✓</span></div>
+    </div>
+    <div class="card" style="border-color:rgba(240,174,34,.2)">
+      <div class="card-title">July 2026 — 30–60 Day <span class="flag flag-tomato">⚠ Critical Month</span></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--tomato);letter-spacing:1px;margin-bottom:8px">$270,369</div>
+      <div class="br"><div class="br-label">ARLS / Anthem<small>Below breakeven</small></div><div class="br-track"><div class="br-fill" style="width:41.7%;background:var(--tomato)"></div></div><div class="br-val c-tomato">$45,750</div></div>
+      <div class="br"><div class="br-label">SECA-SD<small>Very thin — 1 wedding</small></div><div class="br-track"><div class="br-fill" style="width:15.8%;background:var(--tomato)"></div></div><div class="br-val c-tomato">$17,305</div></div>
+      <div class="br"><div class="br-label">A&J / Eco DC<small>Clark Const. anchor</small></div><div class="br-track"><div class="br-fill" style="width:85.9%;background:var(--celery)"></div></div><div class="br-val c-celery">$94,226</div></div>
+      <div class="br"><div class="br-label">SuperFd DC<small>$55K National event</small></div><div class="br-track"><div class="br-fill" style="width:66.5%;background:var(--saffron)"></div></div><div class="br-val c-saffron">$73,000</div></div>
+      <div class="br"><div class="br-label">SECA-LA<small>CAA $26.4K + Territory</small></div><div class="br-track"><div class="br-fill" style="width:36.5%;background:var(--copper)"></div></div><div class="br-val">$40,088</div></div>
+      <div style="height:1px;background:rgba(184,115,51,.25);margin:10px 0"></div>
+      <div style="font-size:10px;color:var(--ink-dim)">Breakeven: <span style="color:var(--saffron)">$365,523 · $7,376 SHORT ⚠</span></div>
+    </div>
+    <div class="card" style="border-color:rgba(184,115,51,.2)">
+      <div class="card-title">August 2026 — 60–90 Day <span class="flag flag-saffron">Building</span></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--copper-light);letter-spacing:1px;margin-bottom:8px">~$425,000</div>
+      <div style="font-size:10px;color:var(--stainless-dim);line-height:1.7;margin-bottom:10px">Operator estimate. Caterease August data pending. Fall event season begins to book. Sept pipeline activation critical.</div>
+      <div class="br"><div class="br-label">Definite (est.)</div><div class="br-track"><div class="br-fill" style="width:56.5%;background:var(--celery)"></div></div><div class="br-val c-celery">~$240K</div></div>
+      <div class="br"><div class="br-label">Tentative (est.)</div><div class="br-track"><div class="br-fill" style="width:43.5%;background:var(--copper)"></div></div><div class="br-val c-copper">~$185K</div></div>
+      <div style="height:1px;background:rgba(184,115,51,.25);margin:10px 0"></div>
+      <div style="font-size:10px;color:var(--ink-dim)">Breakeven: <span style="color:var(--copper-light)">$365,523 · 1.5x covered (est.) ✓</span></div>
+    </div>
+  </div>
+
+  <!-- 13-WEEK CASH FLOW -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">13-Week Cash Flow — June 11 through August 31 <span class="flag flag-tomato">Live · $35,743 Opening</span></div>
+    <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 90px 90px;gap:8px;padding:6px 0;border-bottom:2px solid var(--surface-border);margin-bottom:4px">
+      <div class="cf-hdr-label">WEEK</div>
+      <div class="cf-hdr-label" style="text-align:right">CASH IN</div>
+      <div class="cf-hdr-label" style="text-align:right">PAYROLL</div>
+      <div class="cf-hdr-label" style="text-align:right">RENT</div>
+      <div class="cf-hdr-label" style="text-align:right">HARD OVHD</div>
+      <div class="cf-hdr-label" style="text-align:right">NET</div>
+      <div class="cf-hdr-label" style="text-align:right">BALANCE</div>
+    </div>
+    <div id="cf-rows"></div>
+    <div style="font-size:9px;color:var(--stainless-dim);margin-top:8px;font-style:italic">Hard Overhead = minimum vendor COGS to keep deliveries flowing + all fixed weekly costs ($16K/wk). Payroll = $80K bi-weekly.</div>
+  </div>
+
+  <!-- BRIDGE FUNDING GAPS -->
+  <div class="card">
+    <div class="card-title">Key Gaps Requiring Bridge Funding <span class="flag flag-tomato">$175K–$300K needed</span></div>
+    <table class="et">
+      <thead><tr><th>#</th><th>Week</th><th>Gap Amount</th><th>Cause</th><th>Risk If Not Bridged</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--copper-light);font-weight:600">1</td><td>Jun 29–Jul 5</td><td class="c-tomato">$93,400 shortfall</td><td>Payroll $80K + all 3 rents $25.4K + overhead vs $28K in</td><td class="c-tomato">Missed payroll · LA eviction risk · All 3 landlords in arrears</td></tr>
+        <tr><td style="color:var(--copper-light);font-weight:600">2</td><td>Jul 13–19</td><td class="c-tomato">$28,000 shortfall</td><td>Jul 17 payroll. Clark Construction $49K offsets — timing tight.</td><td class="c-tomato">Payroll missed if Clark delays one week</td></tr>
+        <tr><td style="color:var(--copper-light);font-weight:600">3</td><td>Jul 27–Aug 2</td><td class="c-tomato">$42,000 shortfall</td><td>Jul 31 payroll vs $54K in. Requires $55K event to collect.</td><td class="c-tomato">Payroll at risk if $55K event delays to August</td></tr>
+        <tr><td style="color:var(--copper-light);font-weight:600">4</td><td>Aug 3–9</td><td class="c-saffron">$6,400 shortfall</td><td>Aug rent $25.4K + overhead vs $35K in. No payroll.</td><td class="c-saffron">Rent payments missed. Landlord patience ends.</td></tr>
+        <tr><td style="color:var(--copper-light);font-weight:600">5</td><td>Aug 10 onward</td><td class="c-tomato">$46K+ per payroll</td><td>Each payroll week needs ~$96K out. Revenue not yet there.</td><td class="c-tomato">Payroll failure → staff departures → operational collapse</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="padding:12px 14px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-radius:3px">
+        <div style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--tomato);margin-bottom:4px">Minimum Bridge (Gaps 1, 3, 5)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--tomato);letter-spacing:1px">$175,000 – $215,000</div>
+        <div style="font-size:10px;color:var(--ink-dim)">Covers critical payroll + rent weeks only</div>
+      </div>
+      <div style="padding:12px 14px;background:rgba(184,115,51,.08);border:1px solid rgba(184,115,51,.2);border-radius:3px">
+        <div style="font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper);margin-bottom:4px">Full Bridge (All 5 Gaps)</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--copper-light);letter-spacing:1px">$250,000 – $300,000</div>
+        <div style="font-size:10px;color:var(--ink-dim)">All gaps + operating buffer through September</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT PANEL -->
+<div class="alert-panel" id="alert-panel">
+  <div class="ap-title">Intelligence Alerts — Culinary IQ™<span class="ap-close" onclick="toggleAlerts()">✕</span></div>
+  <div class="a-item tomato"><strong>Cash $35,743 — Cash Critical — $35,743</strong>ARLS $17,635 + MioLogic $5,235 received. Jun 19 payroll covered. Next priority: SD landlord $13,400 and DC rent $6,500 this week.<div class="a-ts">Action Now · Cash</div></div>
+  <div class="a-item tomato"><strong>SD Rent Arrears $13,400</strong>May + June unpaid at $6,700/mo. Landlord flexible but patience limited. Collect Broocker $21K, pay landlord week of Jun 22–28.<div class="a-ts">This Week · SD</div></div>
+  <div class="a-item tomato"><strong>DC Rent Balance $6,500</strong>Paid $5K of $11.5K June rent. Balance due by Jun 27. Pay from June DC event collections.<div class="a-ts">Jun 27 · DC</div></div>
+  <div class="a-item tomato"><strong>Vendors Holding Deliveries</strong>Past-due balances causing delivery holds. Call top 3 vendors today with specific payment dates. Flex: ~$38K available after Jun 11–21 balance.<div class="a-ts">Today · Vendors</div></div>
+  <div class="a-item tomato"><strong>Jun 29–Jul 5: $93,400 Shortfall</strong>Hardest single week. $121,400 total out vs $28K in. Protect ALL June surplus for this week. No discretionary spending before July 6.<div class="a-ts">Jun 29 · Critical</div></div>
+  <div class="a-item saffron"><strong>Clark Construction Jul 15 — $49,123</strong>Anchor event for all of July. Without it Jul 13–19 balance hits near zero. Confirm signed contract this week.<div class="a-ts">This Week · A&J DC</div></div>
+  <div class="a-item saffron"><strong>SuperFd National Jul 31 — $55,000</strong>Funds Jul 31 payroll. Confirm event is real, contracted, and will collect by Jul 31.<div class="a-ts">Confirm Now · SuperFd</div></div>
+  <div class="a-item saffron"><strong>ARLS July Below Breakeven</strong>July ARLS revenue $45,750 vs $68,422 breakeven. Season winding down. Gap bridged by DC surplus.<div class="a-ts">July · ARLS</div></div>
+  <div class="a-item saffron"><strong>SECA-SD July Only $17,305</strong>Very thin — one EPIC wedding + 2 small events. SD needs bridging from DC/national surplus in July.<div class="a-ts">July · SECA-SD</div></div>
+  <div class="a-item saffron"><strong>SuperFd Pricing Discrepancy</strong>Add-on fees show 3 price columns. Airport: $125/$106/$75. Drop-off: $150/$128/$75. Resolve before beta.<div class="a-ts">Before Beta · Pricing</div></div>
+  <div class="a-item celery"><strong>SECA-SD June $109,643 — Portfolio Leader</strong>IonOptics, Broocker, Marshall EPIC, SD EPIC all executing. Strongest single-entity month in portfolio.<div class="a-ts">June · SECA-SD</div></div>
+  <div class="a-item celery"><strong>A&J Prime Cost 45% — Excellent</strong>Well below 58–65% industry target. Full-service catering model is the portfolio's most efficient operation.<div class="a-ts">YTD · A&J</div></div>
+  <div class="a-item celery"><strong>ARLS +137% Q1→Q2</strong>Fastest-growing entity. $415K in Q2 vs $175K in Q1. Season-driven but strong trend.<div class="a-ts">Q2 · ARLS</div></div>
+  <div class="a-item copper"><strong>Bridge Capital: $175–300K Needed</strong>Gap is structural from July onward. Revenue covers operations but not simultaneously: arrears + full rent + payroll + vendor restoration.<div class="a-ts">Ongoing · Strategic</div></div>
+</div>
+
+</div><!-- end main-content -->
+</div><!-- end app-body -->
+</div><!-- end screen-app -->
+
+<script>
+const roles = {
+  executive: {name:'Robert Wood', role:'Owner', av:'RW'},
+  culinary:  {name:'Marcus Chen', role:'Exec Chef',  av:'MC'},
+  foh:       {name:'Diana Reyes', role:'FOH Director',av:'DR'},
+  finance:   {name:'James Park',  role:'Controller',  av:'JP'}
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function launch(role) {
+  const r = roles[role] || roles.executive;
+  document.getElementById('u-name').textContent = r.name;
+  document.getElementById('u-role').textContent = r.role;
+  document.getElementById('u-av').textContent   = r.av;
+  showScreen('screen-app');
+  const defaultView = role === 'culinary' ? 'culinary' : role === 'foh' ? 'foh' : role === 'finance' ? 'finance' : 'executive';
+  switchView(defaultView);
+  buildChart();
+  buildCashFlow();
+  animateBars();
+}
+
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.rail-item').forEach(r => r.classList.remove('active'));
+  const v = document.getElementById('view-' + name);
+  const r = document.getElementById('rail-' + name);
+  if (v) v.classList.add('active');
+  if (r) r.classList.add('active');
+  setTimeout(animateBars, 80);
+}
+
+function toggleAlerts() {
+  document.getElementById('alert-panel').classList.toggle('open');
+}
+
+function buildChart() {
+  const el = document.getElementById('exec-chart');
+  if (!el || el.children.length) return;
+  const months = [
+    {l:'JAN', v:288750,  c:'#3a5f8a'},
+    {l:'FEB', v:391445,  c:'#3a5f8a'},
+    {l:'MAR', v:550817,  c:'#B87333'},
+    {l:'APR', v:568511,  c:'#B87333'},
+    {l:'MAY', v:640662,  c:'#1B4D3E'},
+    {l:'JUN', v:393273,  c:'#C0392B'},
+    {l:'JUL', v:270369,  c:'#E9A319'},
+    {l:'AUG', v:425000,  c:'#7E868F'},
+  ];
+  const mx = Math.max(...months.map(m => m.v));
+  months.forEach(m => {
+    const pct = (m.v / mx * 100).toFixed(1);
+    const col = document.createElement('div');
+    col.className = 'mb-col';
+    col.innerHTML = `<div class="mb-bar-wrap"><div class="mb-bar" data-v="$${(m.v/1000).toFixed(0)}K" style="height:${pct}%;background:${m.c};opacity:.82"></div></div><div class="mb-label">${m.l}</div>`;
+    el.appendChild(col);
+  });
+}
+
+function buildCashFlow() {
+  const el = document.getElementById('cf-rows');
+  if (!el) return;
+  const weeks = [
+    {w:'Jun 16-21',   rev:95000,  pay:80000, rent:0,     oh:16000},
+    {w:'Jun 22-28',   rev:88000,  pay:0,     rent:13400, oh:16000},
+    {w:'Jun 29-Jul 5',rev:45000,  pay:80000, rent:25400, oh:16000},
+    {w:'Jul 6-12',    rev:65000,  pay:0,     rent:0,     oh:16000},
+    {w:'Jul 13-19',   rev:75000,  pay:80000, rent:0,     oh:16000},
+    {w:'Jul 20-26',   rev:38000,  pay:0,     rent:0,     oh:16000},
+    {w:'Jul 27-Aug 2',rev:62000,  pay:80000, rent:0,     oh:16000},
+    {w:'Aug 3-9',     rev:42000,  pay:0,     rent:25400, oh:16000},
+    {w:'Aug 10-16',   rev:55000,  pay:80000, rent:0,     oh:16000},
+    {w:'Aug 17-23',   rev:48000,  pay:0,     rent:0,     oh:16000},
+    {w:'Aug 24-31',   rev:55000,  pay:80000, rent:0,     oh:16000},
+  ];
+  let balance = 35743;
+  el.innerHTML = '';
+  weeks.forEach((w, i) => {
+    const hard = w.pay + w.rent + w.oh;
+    const net  = w.rev - hard;
+    balance += net;
+    const flex = Math.max(0, balance - 15000);
+
+    let statusClass, statusText, balColor;
+    if      (balance <  0)    { statusClass='status-critical'; statusText='CRITICAL'; balColor='var(--tomato)'; }
+    else if (balance < 20000) { statusClass='status-danger';   statusText='DANGER';   balColor='var(--tomato)'; }
+    else if (balance < 40000) { statusClass='status-tight';    statusText='TIGHT';    balColor='var(--saffron)';}
+    else if (balance < 80000) { statusClass='status-watch';    statusText='WATCH';    balColor='var(--saffron)';}
+    else                      { statusClass='status-ok';       statusText='OK';        balColor='var(--celery)'; }
+
+    const fm = v => v === 0 ? '-' : v < 0 ? `($${Math.abs(v).toLocaleString()})` : `$${v.toLocaleString()}`;
+    const fs = v => v === 0 ? '-' : v < 0 ? `($${Math.abs(v).toLocaleString()})` : `+$${v.toLocaleString()}`;
+
+    const row = document.createElement('div');
+    row.style.cssText = `display:grid;grid-template-columns:90px 1fr 1fr 1fr 1fr 90px 90px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--surface-border);background:${i%2===0?'transparent':'rgba(0,0,0,.02)'}`;
+    row.innerHTML = `
+      <div style="font-size:10px;color:${w.pay>0?'var(--tomato)':'var(--stainless)'};font-weight:${w.pay>0?'500':'300'}">${w.w}</div>
+      <div style="text-align:right;font-size:10px;color:var(--copper-dark);font-weight:500">${fm(w.rev)}</div>
+      <div style="text-align:right;font-size:10px;color:${w.pay>0?'var(--tomato)':'var(--stainless-dim)'};font-weight:${w.pay>0?'500':'300'}">${w.pay>0?fm(w.pay):'-'}</div>
+      <div style="text-align:right;font-size:10px;color:${w.rent>0?'var(--saffron)':'var(--stainless-dim)'}">${w.rent>0?fm(w.rent):'-'}</div>
+      <div style="text-align:right;font-size:10px;color:var(--ink-dim)">${fm(w.oh)}</div>
+      <div style="text-align:right;font-size:10px;color:${net>=0?'var(--celery)':'var(--tomato)'};font-weight:500">${fs(net)}</div>
+      <div style="text-align:right;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.5px;color:${balColor}">${fm(balance)}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
+function animateBars() {
+  document.querySelectorAll('.view.active .br-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.transition = 'none'; el.style.width = '0';
+    setTimeout(() => { el.style.transition = 'width .9s ease'; el.style.width = w; }, 60);
+  });
+}
+
+buildChart();
+</script>
+</body>
+</html>

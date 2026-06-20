@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Calendar — Culinary IQ™ | Hospitality Boss</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#F4F2EE;--warm-white:#FAF8F5;--warm-light:#EDE9E3;--warm-border:#DDD8CF;
+  --forge:#141414;--ink:#1A1714;--ink-2:#4A4540;--ink-dim:#7A7268;
+  --copper:#B87333;--copper-light:#D4956A;--copper-dark:#8C5524;
+  --tomato:#C0392B;--saffron:#C8860A;--spinach:#1B4D3E;--celery:#4A8C3F;
+  --plantain:#E9A319;--beet:#8B2252;--white:#FFFFFF;
+  --tomato-tint:#FDF0EE;--saffron-tint:#FDFAEC;--celery-tint:#EEF5EC;--spinach-tint:#E8F5E9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--parchment);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;font-size:13px;min-height:100vh;}
+header{background:var(--forge);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:3px;color:var(--copper);line-height:1;}
+.logo-sub{font-size:8px;letter-spacing:2.5px;color:#6B6560;text-transform:uppercase;}
+.nav-links{display:flex;gap:8px;}
+.nav-link{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#8A8480;padding:6px 12px;border:1px solid #3A3530;border-radius:2px;text-decoration:none;transition:all .15s;}
+.nav-link:hover{color:var(--copper-light);border-color:var(--copper-dark);}
+.sear{height:2px;background:linear-gradient(90deg,var(--copper-dark),var(--copper),var(--copper-light),transparent);}
+
+.toolbar{background:var(--warm-white);border-bottom:1px solid var(--warm-border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.toolbar-left{display:flex;align-items:center;gap:16px;}
+.month-nav{display:flex;align-items:center;gap:10px;}
+.month-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--ink);min-width:180px;}
+.nav-btn{background:var(--white);border:1px solid var(--warm-border);color:var(--ink-2);width:30px;height:30px;border-radius:3px;cursor:pointer;font-size:14px;transition:all .15s;}
+.nav-btn:hover{border-color:var(--copper);color:var(--copper-dark);}
+.toolbar-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+
+.toggle-group{display:flex;background:var(--warm-light);border-radius:4px;padding:3px;border:1px solid var(--warm-border);}
+.toggle-btn{padding:5px 14px;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--ink-dim);border-radius:3px;transition:all .15s;}
+.toggle-btn.active{background:var(--copper);color:var(--white);}
+
+.lens-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);font-weight:600;}
+
+.content{padding:18px 24px 40px;}
+
+/* MONTH GRID */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.dow{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);font-weight:600;text-align:center;padding:6px 0;}
+.day-cell{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;min-height:104px;padding:6px;display:flex;flex-direction:column;gap:3px;cursor:default;transition:box-shadow .15s;position:relative;}
+.day-cell:hover{box-shadow:0 2px 8px rgba(26,23,20,.08);}
+.day-cell.empty{background:transparent;border:none;}
+.day-cell.today{border-color:var(--copper);border-width:2px;}
+.day-num{font-size:11px;font-weight:600;color:var(--ink-2);}
+.day-cell.today .day-num{color:var(--copper-dark);}
+.day-spine{display:flex;justify-content:space-between;align-items:center;font-size:8.5px;color:var(--ink-dim);border-top:1px solid var(--warm-light);padding-top:3px;margin-top:auto;}
+.day-rev{font-weight:600;color:var(--ink-2);}
+.risk-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* EVENT BARS — stacked, each individually colored */
+.ev-bar{font-size:9px;padding:2px 5px;border-radius:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;border-left:3px solid;line-height:1.4;transition:all .12s;}
+.ev-bar:hover{filter:brightness(.97);transform:translateX(1px);}
+/* margin lens */
+.m-strong{background:var(--celery-tint);border-left-color:var(--celery);color:var(--spinach);}
+.m-ok{background:var(--saffron-tint);border-left-color:var(--saffron);color:var(--copper-dark);}
+.m-thin{background:rgba(184,115,51,.08);border-left-color:var(--copper);color:var(--copper-dark);}
+.m-loss{background:var(--tomato-tint);border-left-color:var(--tomato);color:var(--tomato);}
+/* status lens */
+.s-confirmed{background:var(--celery-tint);border-left-color:var(--celery);color:var(--spinach);}
+.s-deposit{background:rgba(184,115,51,.08);border-left-color:var(--copper);color:var(--copper-dark);}
+.s-tentative{background:var(--white);border-left-color:var(--saffron);border:1px dashed var(--saffron);color:var(--saffron);}
+/* size lens */
+.z-big{background:var(--spinach-tint);border-left-color:var(--spinach);color:var(--spinach);font-weight:600;}
+.z-mid{background:var(--celery-tint);border-left-color:var(--celery);color:var(--spinach);}
+.z-small{background:var(--warm-light);border-left-color:var(--ink-dim);color:var(--ink-2);}
+
+/* WEEK VIEW */
+.week-grid{display:flex;flex-direction:column;gap:8px;}
+.week-day{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;padding:12px 16px;}
+.week-day.today{border-color:var(--copper);}
+.wd-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--warm-light);}
+.wd-date{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--ink);}
+.wd-summary{font-size:10px;color:var(--ink-dim);}
+.wd-summary strong{color:var(--ink-2);}
+.wd-events{display:flex;flex-direction:column;gap:6px;}
+.wev{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:3px;border-left:3px solid;cursor:pointer;transition:all .12s;}
+.wev:hover{filter:brightness(.98);}
+.wev-time{font-size:10px;color:var(--ink-dim);width:60px;flex-shrink:0;}
+.wev-name{font-size:12px;font-weight:500;color:var(--ink);flex:1;}
+.wev-detail{font-size:10px;color:var(--ink-dim);}
+.wev-rev{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--ink);width:64px;text-align:right;flex-shrink:0;}
+.wev-badge{font-size:8px;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:2px;font-weight:600;flex-shrink:0;}
+
+/* LEGEND */
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding:12px 16px;background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;font-size:10px;color:var(--ink-2);}
+.legend-item{display:flex;align-items:center;gap:6px;}
+.legend-swatch{width:12px;height:12px;border-radius:2px;border-left:3px solid;}
+
+/* MONTH SUMMARY STRIP */
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px;}
+.sum-card{background:var(--warm-white);border:1px solid var(--warm-border);border-radius:4px;padding:11px 14px;border-top:3px solid var(--warm-border);}
+.sum-card.g{border-top-color:var(--celery);}.sum-card.a{border-top-color:var(--saffron);}.sum-card.c{border-top-color:var(--copper);}.sum-card.r{border-top-color:var(--tomato);}
+.sum-label{font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-dim);margin-bottom:3px;}
+.sum-value{font-family:'Bebas Neue',sans-serif;font-size:21px;line-height:1;color:var(--ink);}
+.sum-sub{font-size:9px;color:var(--ink-dim);margin-top:2px;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,20,20,.4);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--warm-white);border-radius:6px;max-width:420px;width:100%;overflow:hidden;box-shadow:0 8px 32px rgba(20,20,20,.25);}
+.modal-head{background:var(--forge);padding:16px 20px;border-bottom:3px solid var(--copper);}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--copper-light);}
+.modal-date{font-size:10px;color:#8A8480;letter-spacing:1px;}
+.modal-body{padding:18px 20px;}
+.modal-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--warm-light);font-size:12px;}
+.modal-row:last-child{border-bottom:none;}
+.modal-row-label{color:var(--ink-dim);}
+.modal-row-val{font-weight:600;color:var(--ink);}
+.modal-actions{display:flex;gap:8px;margin-top:16px;}
+.modal-btn{flex:1;text-align:center;padding:10px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1.5px;border-radius:3px;cursor:pointer;text-decoration:none;transition:all .15s;}
+.modal-btn.primary{background:var(--copper);color:var(--white);border:none;}
+.modal-btn.primary:hover{background:var(--copper-light);}
+.modal-btn.ghost{background:transparent;border:1px solid var(--warm-border);color:var(--ink-2);}
+.modal-btn.ghost:hover{border-color:var(--copper);color:var(--copper-dark);}
+.modal-close{float:right;cursor:pointer;color:#8A8480;font-size:18px;line-height:1;}
+
+@media(max-width:720px){.day-cell{min-height:80px;}.month-title{min-width:120px;font-size:18px;}.ev-bar{font-size:8px;}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo-main">Hospitality Boss</div>
+    <div class="logo-sub">Culinary IQ™ · Event Calendar</div>
+  </div>
+  <div class="nav-links">
+    <a href="hospitality-boss-platform-light.html" class="nav-link">&#8962; Platform</a>
+    <a href="ops-converter.html" class="nav-link">&#128203; Ops</a>
+    <a href="pre-event-pl.html" class="nav-link">&#128202; P&amp;L</a>
+  </div>
+</header>
+<div class="sear"></div>
+
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="month-nav">
+      <button class="nav-btn" onclick="changePeriod(-1)">&#8249;</button>
+      <div class="month-title" id="periodTitle">July 2026</div>
+      <button class="nav-btn" onclick="changePeriod(1)">&#8250;</button>
+    </div>
+    <div class="toggle-group">
+      <button class="toggle-btn active" id="view-month" onclick="setView('month')">Month</button>
+      <button class="toggle-btn" id="view-week" onclick="setView('week')">Week</button>
+    </div>
+  </div>
+  <div class="toolbar-right">
+    <span class="lens-label">Color by</span>
+    <div class="toggle-group">
+      <button class="toggle-btn active" id="lens-margin" onclick="setLens('margin')">Margin</button>
+      <button class="toggle-btn" id="lens-status" onclick="setLens('status')">Status</button>
+      <button class="toggle-btn" id="lens-size" onclick="setLens('size')">Size</button>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="summary-strip" id="summaryStrip"></div>
+  <div id="calendarArea"></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-close" onclick="closeModal()">&times;</span>
+      <div class="modal-title" id="mTitle">Event</div>
+      <div class="modal-date" id="mDate"></div>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+// ── REAL DC PIPELINE DATA (July 2026) ──
+// status: confirmed | deposit | tentative ; margin computed from rev & cost
+const EVENTS = [
+  {date:'2026-07-04',name:'District Wharf Properties',brand:'Eco',type:'Buffet',guests:120,rev:13248,margin:14,status:'tentative',time:'5:00 PM',staff:8},
+  {date:'2026-07-06',name:'Territory Foods (wk 1)',brand:'SuperFd',type:'Drop-off',guests:0,rev:4500,margin:22,status:'confirmed',time:'7:00 AM',staff:1},
+  {date:'2026-07-06',name:'Anthem Concessions',brand:'Anthem',type:'Concessions',guests:0,rev:6000,margin:16,status:'confirmed',time:'6:00 PM',staff:6},
+  {date:'2026-07-08',name:'Anthem Catering',brand:'Anthem',type:'Catering',guests:90,rev:5400,margin:17,status:'confirmed',time:'5:00 PM',staff:5},
+  {date:'2026-07-13',name:'Territory Foods (wk 2)',brand:'SuperFd',type:'Drop-off',guests:0,rev:4500,margin:22,status:'confirmed',time:'7:00 AM',staff:1},
+  {date:'2026-07-14',name:'CBRE Corporate Lunch',brand:'Eco',type:'Lunch',guests:60,rev:6049,margin:11,status:'tentative',time:'12:00 PM',staff:4},
+  {date:'2026-07-15',name:'Clark Construction',brand:'Eco',type:'Dinner Buffet',guests:280,rev:38833,margin:18,status:'confirmed',time:'6:00 PM',staff:14,anchor:true},
+  {date:'2026-07-16',name:'Anthem Concessions',brand:'Anthem',type:'Concessions',guests:0,rev:7000,margin:16,status:'confirmed',time:'6:00 PM',staff:6},
+  {date:'2026-07-18',name:'Simone Askew Celebration',brand:'Eco',type:'Reception',guests:95,rev:9770,margin:13,status:'tentative',time:'4:00 PM',staff:7},
+  {date:'2026-07-20',name:'Territory Foods (wk 3)',brand:'SuperFd',type:'Drop-off',guests:0,rev:4500,margin:22,status:'confirmed',time:'7:00 AM',staff:1},
+  {date:'2026-07-22',name:'Anthem Catering',brand:'Anthem',type:'Catering',guests:75,rev:4950,margin:17,status:'deposit',time:'5:00 PM',staff:5},
+  {date:'2026-07-23',name:'Anthem Concessions',brand:'Anthem',type:'Concessions',guests:0,rev:5000,margin:16,status:'confirmed',time:'6:00 PM',staff:6},
+  {date:'2026-07-27',name:'Territory Foods (wk 4)',brand:'SuperFd',type:'Drop-off',guests:0,rev:4500,margin:22,status:'confirmed',time:'7:00 AM',staff:1},
+  {date:'2026-07-28',name:'Earl M. Decker',brand:'Eco',type:'Lunch',guests:55,rev:6259,margin:9,status:'tentative',time:'12:00 PM',staff:4},
+  {date:'2026-07-31',name:'SuperFd National',brand:'SuperFd',type:'Aggregate',guests:0,rev:12000,margin:24,status:'tentative',time:'All day',staff:2},
+];
+
+let curYear=2026, curMonth=6; // July (0-indexed)
+let view='month', lens='margin';
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function money(n){return '$'+Math.round(n).toLocaleString();}
+function marginClass(m){return m>=14?'m-strong':m>=10?'m-ok':m>=5?'m-thin':'m-loss';}
+function statusClass(s){return s==='confirmed'?'s-confirmed':s==='deposit'?'s-deposit':'s-tentative';}
+function sizeClass(r){return r>=15000?'z-big':r>=5000?'z-mid':'z-small';}
+function barClass(ev){return lens==='margin'?marginClass(ev.margin):lens==='status'?statusClass(ev.status):sizeClass(ev.rev);}
+function eventsOn(dateStr){return EVENTS.filter(e=>e.date===dateStr);}
+function pad(n){return n<10?'0'+n:''+n;}
+
+function dayRiskDot(evs){
+  // biggest event's status drives the day risk dot
+  if(!evs.length) return null;
+  const biggest=[...evs].sort((a,b)=>b.rev-a.rev)[0];
+  if(biggest.status==='confirmed') return 'var(--celery)';
+  if(biggest.status==='deposit') return 'var(--copper)';
+  return 'var(--saffron)';
+}
+
+function renderSummary(){
+  const monthEvents=EVENTS.filter(e=>{const d=new Date(e.date+'T00:00');return d.getMonth()===curMonth&&d.getFullYear()===curYear;});
+  const totalRev=monthEvents.reduce((s,e)=>s+e.rev,0);
+  const confirmed=monthEvents.filter(e=>e.status==='confirmed').reduce((s,e)=>s+e.rev,0);
+  const tentative=monthEvents.filter(e=>e.status==='tentative').reduce((s,e)=>s+e.rev,0);
+  const atRisk=monthEvents.filter(e=>e.margin<10).length;
+  document.getElementById('summaryStrip').innerHTML=
+    '<div class="sum-card c"><div class="sum-label">Events</div><div class="sum-value">'+monthEvents.length+'</div><div class="sum-sub">this month</div></div>'+
+    '<div class="sum-card c"><div class="sum-label">Total Revenue</div><div class="sum-value">'+money(totalRev)+'</div><div class="sum-sub">all events</div></div>'+
+    '<div class="sum-card g"><div class="sum-label">Confirmed</div><div class="sum-value">'+money(confirmed)+'</div><div class="sum-sub">'+Math.round(confirmed/totalRev*100)+'% locked</div></div>'+
+    '<div class="sum-card a"><div class="sum-label">Tentative</div><div class="sum-value">'+money(tentative)+'</div><div class="sum-sub">needs confirming</div></div>'+
+    '<div class="sum-card r"><div class="sum-label">Thin Margin</div><div class="sum-value">'+atRisk+'</div><div class="sum-sub">events under 10%</div></div>';
+}
+
+function renderMonth(){
+  const first=new Date(curYear,curMonth,1);
+  const startDow=first.getDay();
+  const daysInMonth=new Date(curYear,curMonth+1,0).getDate();
+  const today=new Date();
+  let html='<div class="cal-grid">';
+  DOW.forEach(d=>html+='<div class="dow">'+d+'</div>');
+  for(let i=0;i<startDow;i++) html+='<div class="day-cell empty"></div>';
+  for(let day=1;day<=daysInMonth;day++){
+    const dateStr=curYear+'-'+pad(curMonth+1)+'-'+pad(day);
+    const evs=eventsOn(dateStr);
+    const isToday=today.getFullYear()===curYear&&today.getMonth()===curMonth&&today.getDate()===day;
+    const dayRev=evs.reduce((s,e)=>s+e.rev,0);
+    const dot=dayRiskDot(evs);
+    html+='<div class="day-cell'+(isToday?' today':'')+'">';
+    html+='<div class="day-num">'+day+'</div>';
+    evs.slice(0,3).forEach((ev,i)=>{
+      html+='<div class="ev-bar '+barClass(ev)+'" onclick="openEvent(\''+dateStr+'\','+EVENTS.indexOf(ev)+')" title="'+ev.name+'">'+ev.name+'</div>';
+    });
+    if(evs.length>3) html+='<div style="font-size:8px;color:var(--ink-dim);padding-left:5px">+'+(evs.length-3)+' more</div>';
+    if(evs.length) html+='<div class="day-spine"><span class="day-rev">'+money(dayRev)+'</span>'+(dot?'<span class="risk-dot" style="background:'+dot+'"></span>':'')+'</div>';
+    html+='</div>';
+  }
+  html+='</div>';
+  document.getElementById('calendarArea').innerHTML=html;
+}
+
+function renderWeek(){
+  // Show the week containing the 15th (Clark anchor) by default, or current month's events grouped
+  const monthEvents=EVENTS.filter(e=>{const d=new Date(e.date+'T00:00');return d.getMonth()===curMonth&&d.getFullYear()===curYear;});
+  const byDate={};
+  monthEvents.forEach(e=>{(byDate[e.date]=byDate[e.date]||[]).push(e);});
+  const dates=Object.keys(byDate).sort();
+  let html='<div class="week-grid">';
+  dates.forEach(dateStr=>{
+    const evs=byDate[dateStr];
+    const d=new Date(dateStr+'T00:00');
+    const dayRev=evs.reduce((s,e)=>s+e.rev,0);
+    const staff=evs.reduce((s,e)=>s+e.staff,0);
+    html+='<div class="week-day">';
+    html+='<div class="wd-head"><div class="wd-date">'+DOW[d.getDay()]+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getDate()+'</div>';
+    html+='<div class="wd-summary"><strong>'+money(dayRev)+'</strong> · '+evs.length+' event'+(evs.length>1?'s':'')+' · '+staff+' staff</div></div>';
+    html+='<div class="wd-events">';
+    evs.forEach(ev=>{
+      const bc=barClass(ev);
+      const badgeColor=ev.status==='confirmed'?'var(--celery-tint);color:var(--spinach)':ev.status==='deposit'?'rgba(184,115,51,.1);color:var(--copper-dark)':'var(--saffron-tint);color:var(--saffron)';
+      html+='<div class="wev '+bc+'" onclick="openEvent(\''+dateStr+'\','+EVENTS.indexOf(ev)+')">';
+      html+='<div class="wev-time">'+ev.time+'</div>';
+      html+='<div style="flex:1"><div class="wev-name">'+ev.name+(ev.anchor?' ★':'')+'</div><div class="wev-detail">'+ev.brand+' · '+ev.type+(ev.guests?' · '+ev.guests+' guests':'')+' · '+ev.margin+'% margin</div></div>';
+      html+='<div class="wev-badge" style="background:'+badgeColor+'">'+ev.status+'</div>';
+      html+='<div class="wev-rev">'+money(ev.rev)+'</div>';
+      html+='</div>';
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+  document.getElementById('calendarArea').innerHTML=html;
+}
+
+function renderLegend(){
+  let items='';
+  if(lens==='margin'){
+    items=[['m-strong','Strong (14%+)'],['m-ok','Solid (10-14%)'],['m-thin','Thin (5-10%)'],['m-loss','Losing (<5%)']];
+  }else if(lens==='status'){
+    items=[['s-confirmed','Confirmed'],['s-deposit','Deposit paid'],['s-tentative','Tentative']];
+  }else{
+    items=[['z-big','Large ($15K+)'],['z-mid','Mid ($5-15K)'],['z-small','Small (<$5K)']];
+  }
+  let html='<span class="lens-label" style="margin-right:6px">'+(lens==='margin'?'Margin health':lens==='status'?'Booking status':'Revenue size')+':</span>';
+  items.forEach(([cls,label])=>{
+    html+='<div class="legend-item"><span class="legend-swatch '+cls+'"></span>'+label+'</div>';
+  });
+  html+='<div class="legend-item" style="margin-left:auto"><span class="risk-dot" style="background:var(--celery)"></span>day\'s top event locked</div>';
+  document.getElementById('legend').innerHTML=html;
+}
+
+function render(){
+  document.getElementById('periodTitle').textContent=MONTHS[curMonth]+' '+curYear;
+  renderSummary();
+  if(view==='month')renderMonth();else renderWeek();
+  renderLegend();
+}
+
+function setView(v){view=v;document.getElementById('view-month').classList.toggle('active',v==='month');document.getElementById('view-week').classList.toggle('active',v==='week');render();}
+function setLens(l){lens=l;['margin','status','size'].forEach(x=>document.getElementById('lens-'+x).classList.toggle('active',x===l));render();}
+function changePeriod(dir){curMonth+=dir;if(curMonth>11){curMonth=0;curYear++;}if(curMonth<0){curMonth=11;curYear--;}render();}
+
+function openEvent(dateStr,idx){
+  const ev=EVENTS[idx];
+  const d=new Date(dateStr+'T00:00');
+  document.getElementById('mTitle').textContent=ev.name+(ev.anchor?' ★':'');
+  document.getElementById('mDate').textContent=DOW[d.getDay()]+', '+MONTHS[d.getMonth()]+' '+d.getDate()+' · '+ev.time;
+  const cost=ev.rev*(1-ev.margin/100);
+  document.getElementById('mBody').innerHTML=
+    '<div class="modal-row"><span class="modal-row-label">Brand</span><span class="modal-row-val">'+ev.brand+'</span></div>'+
+    '<div class="modal-row"><span class="modal-row-label">Type</span><span class="modal-row-val">'+ev.type+'</span></div>'+
+    (ev.guests?'<div class="modal-row"><span class="modal-row-label">Guests</span><span class="modal-row-val">'+ev.guests+'</span></div>':'')+
+    '<div class="modal-row"><span class="modal-row-label">Revenue</span><span class="modal-row-val">'+money(ev.rev)+'</span></div>'+
+    '<div class="modal-row"><span class="modal-row-label">Est. margin</span><span class="modal-row-val" style="color:'+(ev.margin>=14?'var(--spinach)':ev.margin>=10?'var(--copper-dark)':'var(--tomato)')+'">'+ev.margin+'% ('+money(ev.rev*ev.margin/100)+')</span></div>'+
+    '<div class="modal-row"><span class="modal-row-label">Status</span><span class="modal-row-val">'+ev.status+'</span></div>'+
+    '<div class="modal-row"><span class="modal-row-label">Staff needed</span><span class="modal-row-val">'+ev.staff+'</span></div>'+
+    '<div class="modal-actions">'+
+      '<a href="ops-converter.html" class="modal-btn primary">Build Ops Sheet</a>'+
+      '<a href="pre-event-pl.html" class="modal-btn ghost">Open P&amp;L</a>'+
+    '</div>';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+render();
+</script>
+</body>
+</html>
